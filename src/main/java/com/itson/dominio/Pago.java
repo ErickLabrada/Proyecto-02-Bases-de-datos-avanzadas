@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,12 +27,23 @@ public class Pago implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy="Pago")
+    private Tramite tramite;
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tramite getTramite() {
+        return tramite;
+    }
+
+    public void setTramite(Tramite tramite) {
+        this.tramite = tramite;
     }
     
     @Column (name = "Monto", nullable = false)

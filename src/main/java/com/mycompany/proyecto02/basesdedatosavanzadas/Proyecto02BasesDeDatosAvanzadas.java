@@ -1,7 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.proyecto02.basesdedatosavanzadas;
 
 import com.itson.dominio.Carro;
@@ -9,9 +8,10 @@ import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Placas;
-import com.itson.dominio.Vehiculo;
 import com.itson.dominio.Vigencia;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -28,11 +28,21 @@ public class Proyecto02BasesDeDatosAvanzadas {
     public static void main(String[] args) {
 
         insertPersonas(false, LocalDate.now(), "Erick Antonio Labrada Rodríguez", "LARE157938RFC48", "6681163510");
-        insertCarros("Rojo", "recta", "Toyota", "Bonito", "How I Meet Your Mother");
-        insertLicencias(Vigencia.TWO_YEARS);
-        insertPlacas("ABC-123", LocalDate.now(), true);
-        insertPagos(1500, LocalDate.now());
 
+        Pago pagoPlacas = createPagos(1600, LocalDate.now());
+
+        insertPagos(pagoPlacas);
+        Carro carro = createCarro("Rojo", "recta", "Toyota", "Bonito", "How I Meet Your Mother");
+        List<Placas> listaPlacas = new ArrayList();
+        listaPlacas.add( createPlacas("ABC-123", LocalDate.now(), true, pagoPlacas));
+        listaPlacas.get(0).setVehiculo(carro);
+        insertCarros(carro, listaPlacas);
+
+
+        Pago pagoLicencia = createPagos(1500, LocalDate.now());
+        insertPagos(pagoLicencia);
+        Licencia licencia = createLicencias(Vigencia.TWO_YEARS, pagoLicencia);
+        insertLicencias(licencia);
 
     }
 
@@ -48,47 +58,71 @@ public class Proyecto02BasesDeDatosAvanzadas {
         entityManager.getTransaction().commit();
     }
     
-       public static void insertCarros(String color, String linea, String marca, String modelo, String serie) {
+       public static void insertCarros(Carro carro, List placas) {
     
+        carro.setPlacas(placas);
+        entityManager.getTransaction().begin();
+        entityManager.persist(carro);
+        entityManager.getTransaction().commit();
+    }
+       
+       public static Carro createCarro(String color, String linea, String marca, String modelo, String serie){
+           
         Carro carro = new Carro();
         carro.setColor(color);
         carro.setLinea(linea);
         carro.setMarca(marca);
         carro.setModelo(modelo);
         carro.setSerie(serie);
-        entityManager.getTransaction().begin();
-        entityManager.persist(carro);
-        entityManager.getTransaction().commit();
+        return carro;
+        
+       }
+
+    public static Pago createPagos(double monto, LocalDate fechaPago) {
+        Pago pago = new Pago();
+        pago.setFechaPago(fechaPago);
+        pago.setMonto(monto);
+        return pago;
     }
-       
-       public static void insertPagos(double monto, LocalDate fechaPago){
-           Pago pago = new Pago();
-           pago.setFechaPago(fechaPago);
-           pago.setMonto(1500);
+
+       public static void insertPagos(Pago pago){
            entityManager.getTransaction().begin();
            entityManager.persist(pago);
            entityManager.getTransaction().commit();
        }
        
-       public static void insertLicencias(Vigencia vigencia){
-           Licencia licencia = new Licencia();
-           licencia.setVigencia(vigencia);
+       public static void insertLicencias(Licencia licencia){
            entityManager.getTransaction().begin();
            entityManager.persist(licencia);
            entityManager.getTransaction().commit();
        }
     
-       public static void insertPlacas(String matricula,LocalDate fechaRecepcion, boolean estado){
+  
+       
+       public static Licencia createLicencias(Vigencia vigencia,Pago pago){
+           Licencia licencia = new Licencia();
+           licencia.setVigencia(vigencia);
+           licencia.setPago(pago);
+           return licencia;
+       }
+       
+       public static void insertPlacas(Placas placas, Carro carro){
            
-           Placas placas = new Placas();
-           placas.setEstado(estado);
-           placas.setFechaRecepcion(fechaRecepcion);
-           placas.setMatricula(matricula);
+           placas.setVehiculo(carro);
            entityManager.getTransaction().begin();
            entityManager.persist(placas);
            entityManager.getTransaction().commit();
            
-           
        }
 
+       public static Placas createPlacas(String matricula,LocalDate fechaRecepcion, boolean estado, Pago pago){
+       
+           Placas placas = new Placas();
+           placas.setEstado(estado);
+           placas.setFechaRecepcion(fechaRecepcion);
+           placas.setPago(pago);
+           placas.setMatricula(matricula);
+           return placas;
+       
+       }
 }

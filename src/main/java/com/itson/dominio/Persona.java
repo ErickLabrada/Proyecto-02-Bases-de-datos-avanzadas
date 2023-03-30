@@ -6,11 +6,14 @@ package com.itson.dominio;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -41,6 +44,9 @@ public class Persona implements Serializable {
     @Column (name = "RFC", nullable = false)
     private String rfc;
 
+    @OneToMany(cascade=CascadeType.PERSIST)
+    private List <Tramite> tramite;
+    
     public Persona() {
     }
     

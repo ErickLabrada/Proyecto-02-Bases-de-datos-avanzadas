@@ -1,2 +1,16 @@
 com\mycompany\proyecto02\basesdedatosavanzadas\Proyecto02BasesDeDatosAvanzadas.class
-.netbeans_automatic_build
+com\itson\dominio\Pago_.class
+com\itson\dominio\Placas.class
+com\itson\dominio\Placas_.class
+com\itson\dominio\Licencia_.class
+com\itson\dominio\Carro.class
+com\itson\dominio\Vehiculo_.class
+com\itson\dominio\Tramite.class
+com\itson\dominio\Persona.class
+com\itson\dominio\Vehiculo.class
+com\itson\dominio\Licencia.class
+com\itson\dominio\Carro_.class
+com\itson\dominio\Vigencia.class
+com\itson\dominio\Pago.class
+com\itson\dominio\Persona_.class
+com\itson\dominio\Tramite_.class

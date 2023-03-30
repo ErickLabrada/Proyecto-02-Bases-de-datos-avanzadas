@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -30,6 +33,12 @@ public abstract class Tramite implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name="Pago")
+    private Pago pago;
+    
+    
+    
     public Tramite() {
     }
     
@@ -39,6 +48,18 @@ public abstract class Tramite implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ManyToOne()
+    @JoinColumn(name="PersonaID")
+    private Persona persona;
+    
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
     }
 
     @Override

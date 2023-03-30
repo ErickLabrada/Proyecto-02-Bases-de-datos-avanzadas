@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,9 +39,23 @@ public class Placas extends Tramite implements Serializable {
     @Column (name = "Matricula", nullable = false)
     private String matricula;
 
+    @ManyToOne()
+    @JoinColumn(name="VehiculoID")
+    private Vehiculo vehiculo;
+    
     public Placas() {
     }
 
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    
+    
     public boolean isEstado() {
         return estado;
     }

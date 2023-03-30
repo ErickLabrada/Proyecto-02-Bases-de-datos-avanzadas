@@ -5,6 +5,8 @@
 package com.itson.dominio;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -45,6 +48,9 @@ public abstract class Vehiculo implements Serializable {
     @Column (name = "Serie", nullable = false)
     private String serie;
 
+    @OneToMany(cascade=CascadeType.PERSIST)
+    private List <Placas> placas;
+    
     public Vehiculo() {
     }
     
@@ -54,6 +60,14 @@ public abstract class Vehiculo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List getPlacas() {
+        return placas;
+    }
+
+    public void setPlacas(List placas) {
+        this.placas =  placas;
     }
 
     public String getModelo() {
