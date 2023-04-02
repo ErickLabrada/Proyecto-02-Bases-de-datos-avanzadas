@@ -49,7 +49,7 @@ public abstract class Vehiculo implements Serializable {
     private String serie;
 
     @OneToMany(cascade=CascadeType.PERSIST)
-    private List <Placas> placas;
+    private List <Placa> placas;
     
     public Vehiculo() {
     }
@@ -110,8 +110,6 @@ public abstract class Vehiculo implements Serializable {
         this.serie = sere;
     }
 
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -135,6 +133,5 @@ public abstract class Vehiculo implements Serializable {
     @Override
     public String toString() {
         return "com.itson.dominio.Vehiculo[ id=" + id + " ]";
-    }
-    
+    }   
 }

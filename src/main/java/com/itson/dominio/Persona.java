@@ -44,7 +44,7 @@ public class Persona implements Serializable {
     @Column (name = "RFC", nullable = false)
     private String rfc;
 
-    @OneToMany(cascade=CascadeType.PERSIST)
+    @OneToMany(mappedBy="persona")
     private List <Tramite> tramite;
     
     public Persona() {
@@ -97,6 +97,16 @@ public class Persona implements Serializable {
     public void setRfc(String rfc) {
         this.rfc = rfc;
     }
+
+    public List<Tramite> getTramite() {
+        return tramite;
+    }
+
+    public void setTramite(List<Tramite> tramite) {
+        this.tramite = tramite;
+    }
+    
+    
     
     
 

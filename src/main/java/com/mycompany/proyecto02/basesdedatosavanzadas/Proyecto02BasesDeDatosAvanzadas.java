@@ -3,11 +3,12 @@
  */
 package com.mycompany.proyecto02.basesdedatosavanzadas;
 
+import com.itson.daos.PersonaDAO;
 import com.itson.dominio.Carro;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
-import com.itson.dominio.Placas;
+import com.itson.dominio.Placa;
 import com.itson.dominio.Vigencia;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,36 +28,32 @@ public class Proyecto02BasesDeDatosAvanzadas {
 
     public static void main(String[] args) {
 
-        insertPersonas(false, LocalDate.now(), "Erick Antonio Labrada Rodríguez", "LARE157938RFC48", "6681163510");
+                
+        
+        PersonaDAO personaDAO = new PersonaDAO();
+        personaDAO.insertar(entityManager, true, LocalDate.now(), "Persona genérica", "RFCGenerico", "NumGenerico", new ArrayList());
+//        Licencia licencia = createLicencias(Vigencia.ONE_YEAR, (createPagos(1500, LocalDate.now())), personaDAO.consultar(entityManager, 1L));
+//        insertLicencias(licencia);
+//        personaDAO.addTramites(entityManager, personaDAO.consultar(entityManager, 1L), licencia);
+        
+        
 
-        Pago pagoPlacas = createPagos(1600, LocalDate.now());
+        //insertPersonas(false, LocalDate.now(), "Erick Antonio Labrada Rodríguez", "LARE157938RFC48", "6681163510",new ArrayList());
 
-        insertPagos(pagoPlacas);
-        Carro carro = createCarro("Rojo", "recta", "Toyota", "Bonito", "How I Meet Your Mother");
-        List<Placas> listaPlacas = new ArrayList();
-        listaPlacas.add( createPlacas("ABC-123", LocalDate.now(), true, pagoPlacas));
-        listaPlacas.get(0).setVehiculo(carro);
-        insertCarros(carro, listaPlacas);
+        //Pago pagoPlacas = createPagos(1600, LocalDate.now());
+
+        //insertPagos(pagoPlacas);
+       //Carro carro = createCarro("Rojo", "recta", "Toyota", "Bonito", "How I Meet Your Mother");
+        //List<Placas> listaPlacas = new ArrayList();
+        //listaPlacas.add( createPlacas("ABC-123", LocalDate.now(), true, pagoPlacas));
+        //listaPlacas.get(0).setVehiculo(carro);
+        //insertCarros(carro, listaPlacas);
 
 
-        Pago pagoLicencia = createPagos(1500, LocalDate.now());
-        insertPagos(pagoLicencia);
-        Licencia licencia = createLicencias(Vigencia.TWO_YEARS, pagoLicencia);
-        insertLicencias(licencia);
+        //Pago pagoLicencia = createPagos(1500, LocalDate.now());
+        //insertPagos(pagoLicencia);
 
-    }
-
-    public static void insertPersonas(Boolean discapacidad, LocalDate fechaNacimiento, String nombre, String rfc, String telefono) {
-        Persona persona = new Persona();
-        persona.setDiscapacidad(discapacidad);
-        persona.setFechaNacimiento(fechaNacimiento);
-        persona.setNombre(nombre);
-        persona.setRfc(rfc);
-        persona.setTelefono(telefono);
-        entityManager.getTransaction().begin();
-        entityManager.persist(persona);
-        entityManager.getTransaction().commit();
-    }
+    }   
     
        public static void insertCarros(Carro carro, List placas) {
     
@@ -96,17 +93,16 @@ public class Proyecto02BasesDeDatosAvanzadas {
            entityManager.persist(licencia);
            entityManager.getTransaction().commit();
        }
-    
-  
        
-       public static Licencia createLicencias(Vigencia vigencia,Pago pago){
+       public static Licencia createLicencias(Vigencia vigencia,Pago pago, Persona persona){
            Licencia licencia = new Licencia();
            licencia.setVigencia(vigencia);
            licencia.setPago(pago);
+           licencia.setPersona(persona);
            return licencia;
        }
        
-       public static void insertPlacas(Placas placas, Carro carro){
+       public static void insertPlacas(Placa placas, Carro carro){
            
            placas.setVehiculo(carro);
            entityManager.getTransaction().begin();
@@ -115,9 +111,9 @@ public class Proyecto02BasesDeDatosAvanzadas {
            
        }
 
-       public static Placas createPlacas(String matricula,LocalDate fechaRecepcion, boolean estado, Pago pago){
+       public static Placa createPlacas(String matricula,LocalDate fechaRecepcion, boolean estado, Pago pago){
        
-           Placas placas = new Placas();
+           Placa placas = new Placa();
            placas.setEstado(estado);
            placas.setFechaRecepcion(fechaRecepcion);
            placas.setPago(pago);

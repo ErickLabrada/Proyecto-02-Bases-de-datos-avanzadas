@@ -5,6 +5,7 @@
 package com.itson.dominio;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -33,7 +34,7 @@ public abstract class Tramite implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne (cascade=CascadeType.PERSIST)
     @JoinColumn(name="Pago")
     private Pago pago;
     
@@ -53,6 +54,14 @@ public abstract class Tramite implements Serializable {
     @ManyToOne()
     @JoinColumn(name="PersonaID")
     private Persona persona;
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
     
     public Pago getPago() {
         return pago;

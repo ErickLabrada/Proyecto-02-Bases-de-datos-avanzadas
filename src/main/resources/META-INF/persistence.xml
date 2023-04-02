@@ -8,7 +8,7 @@
     <class>com.itson.dominio.Pago</class>
     <class>com.itson.dominio.Licencia</class>
     <class>com.itson.dominio.Carro</class>
-    <class>com.itson.dominio.Placas</class>
+    <class>com.itson.dominio.Placa</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/concesionario?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
