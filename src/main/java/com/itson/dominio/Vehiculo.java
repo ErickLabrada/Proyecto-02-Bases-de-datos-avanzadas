@@ -47,9 +47,9 @@ public abstract class Vehiculo implements Serializable {
     
     @Column (name = "Serie", nullable = false)
     private String serie;
-
-    @OneToMany(cascade=CascadeType.PERSIST)
-    private List <Placa> placas;
+    
+    @OneToMany(mappedBy="vehiculo")
+    private List <Placa> placa;
     
     public Vehiculo() {
     }
@@ -62,13 +62,14 @@ public abstract class Vehiculo implements Serializable {
         this.id = id;
     }
 
-    public List getPlacas() {
-        return placas;
+    public List<Placa> getPlacas() {
+        return placa;
     }
 
-    public void setPlacas(List placas) {
-        this.placas =  placas;
+    public void setPlacas(List<Placa> placa) {
+        this.placa = placa;
     }
+
 
     public String getModelo() {
         return modelo;

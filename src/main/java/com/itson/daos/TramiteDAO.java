@@ -41,7 +41,8 @@ public class TramiteDAO implements ITramiteDAO {
         Tramite tramite = pago.getTramite();
         
         if (tramite.getPago() != null) {
-            throw new AlreadyPaidException("La " + (tramite.getClass().getAnnotation(DiscriminatorValue.class).value()) + " ya fue pagada.");
+
+
         } else {
             entityManager.getTransaction().begin();
             tramite.setPago(pago);

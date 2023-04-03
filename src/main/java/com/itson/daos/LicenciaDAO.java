@@ -30,4 +30,23 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         entityManager.getTransaction().commit();
 
     }
+
+    @Override
+    public boolean verificaVigencia(EntityManager entityManager, Licencia licencia) {
+
+        LocalDate fechaVigencia;
+
+        if (licencia.getVigencia().equals(Vigencia.ONE_YEAR)) {
+            fechaVigencia = licencia.getPago().getFechaPago().plusYears(1);
+        } else if (licencia.getVigencia().equals(Vigencia.TWO_YEARS)) {
+            fechaVigencia = licencia.getPago().getFechaPago().plusYears(2);
+        } else if (licencia.getVigencia().equals(Vigencia.THREE_YEARS)) {
+            fechaVigencia = licencia.getPago().getFechaPago().plusYears(3);
+        } else {
+            throw new RuntimeException ("Vigencia Inválida");
+        }
+
+        return (licencia.getPago().getFechaPago().isBefore(fechaVigencia));
+    }
+
 }

@@ -24,4 +24,6 @@ public interface IVehiculoDAO {
         
     void addPlacas(EntityManager entityManager, Vehiculo vehiculo, Placa placa);
 
+    void updatePlacas(EntityManager entityManager, Vehiculo vehiculo);
+
 }

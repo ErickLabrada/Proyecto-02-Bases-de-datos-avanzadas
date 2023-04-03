@@ -70,6 +70,14 @@ public class Persona implements Serializable {
         return fechaNacimiento;
     }
 
+    public List<Tramite> getTramite() {
+        return tramite;
+    }
+
+    public void setTramite(List<Tramite> tramite) {
+        this.tramite = tramite;
+    }
+
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
@@ -97,18 +105,6 @@ public class Persona implements Serializable {
     public void setRfc(String rfc) {
         this.rfc = rfc;
     }
-
-    public List<Tramite> getTramite() {
-        return tramite;
-    }
-
-    public void setTramite(List<Tramite> tramite) {
-        this.tramite = tramite;
-    }
-    
-    
-    
-    
 
     @Override
     public int hashCode() {

@@ -14,6 +14,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -33,8 +35,6 @@ public class Licencia extends Tramite implements Serializable {
     @Column (name = "Vigencia", nullable = false)
     @Enumerated (EnumType.STRING)
     private Vigencia vigencia;
-
-    
     
     public Licencia() {
     }

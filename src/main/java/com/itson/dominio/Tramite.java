@@ -34,26 +34,29 @@ public abstract class Tramite implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne (cascade=CascadeType.PERSIST)
-    @JoinColumn(name="Pago")
+    @OneToOne()
+    @JoinColumn(name = "Pago")
     private Pago pago;
-    
-    
+
+    @ManyToOne()
+    @JoinColumn(name = "VehiculoID")
+    private Vehiculo vehiculo;
+
+            
+    @ManyToOne()
+    @JoinColumn(name="PersonaID")
+    private Persona persona;
     
     public Tramite() {
     }
-    
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Vehiculo getVehiculo() {
+        return vehiculo;
     }
-
-    @ManyToOne()
-    @JoinColumn(name="PersonaID")
-    private Persona persona;
 
     public Persona getPersona() {
         return persona;
@@ -62,7 +65,15 @@ public abstract class Tramite implements Serializable {
     public void setPersona(Persona persona) {
         this.persona = persona;
     }
-    
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Pago getPago() {
         return pago;
     }

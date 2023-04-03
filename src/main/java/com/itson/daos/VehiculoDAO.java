@@ -38,6 +38,7 @@ public class VehiculoDAO implements IVehiculoDAO {
     @Override
     public void addPlacas(EntityManager entityManager, Vehiculo vehiculo, Placa placa) {
 
+        updatePlacas(entityManager, vehiculo);
         vehiculo.getPlacas().add(placa);
         entityManager.getTransaction().begin();
         entityManager.merge(vehiculo);
@@ -45,5 +46,18 @@ public class VehiculoDAO implements IVehiculoDAO {
 
     }
 
-    
+    @Override
+    public void updatePlacas(EntityManager entityManager, Vehiculo vehiculo) {
+
+        List<Placa> placas = vehiculo.getPlacas();
+
+        for (Placa placa : placas) {
+            placa.setEstado(false);
+        }
+        entityManager.getTransaction().begin();
+        entityManager.merge(vehiculo);
+        entityManager.getTransaction().commit();
+        
+    }
+
 }

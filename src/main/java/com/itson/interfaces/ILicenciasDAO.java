@@ -4,6 +4,7 @@
  */
 package com.itson.interfaces;
 
+import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Vigencia;
@@ -17,4 +18,6 @@ public interface ILicenciasDAO {
 
     void insertar(EntityManager entityManager, Persona persona, Pago pago, Vigencia vigencia);
 
+    boolean verificaVigencia(EntityManager entityManager, Licencia licencia);
+    
 }
