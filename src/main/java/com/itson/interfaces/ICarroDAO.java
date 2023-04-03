@@ -4,10 +4,16 @@
  */
 package com.itson.interfaces;
 
+import com.itson.dominio.Placa;
+import java.util.List;
+import javax.persistence.EntityManager;
+
 /**
  *
  * @author Erick
  */
 public interface ICarroDAO {
+    
+    void insertar (EntityManager entityManager, String color, String linea, String marca, String modelo, String serie,List <Placa> placas);
     
 }

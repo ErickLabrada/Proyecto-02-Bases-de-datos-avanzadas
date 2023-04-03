@@ -8,6 +8,15 @@ package com.itson.Exceptions;
  *
  * @author Erick
  */
-public class EntityNotFound {
+public class EntityNotFound extends RuntimeException {
+
+    public EntityNotFound() {
+    }
+
+    public EntityNotFound(String message) {
+        super(message);
+    }
+    
+    
     
 }

@@ -29,19 +29,24 @@ public class TramiteDAO implements ITramiteDAO {
     public void eliminar(EntityManager entityManager, Long idTramite) {
         Tramite tramite = entityManager.find(Tramite.class, idTramite);
         if (tramite != null) {
+            entityManager.getTransaction().begin();
             entityManager.remove(tramite);
+            entityManager.getTransaction().commit();
         }
     }
 
     @Override
-    public void addPago(EntityManager entityManager, Tramite tramite, Pago pago) throws AlreadyPaidException {
+    public void addPago(EntityManager entityManager, Pago pago) throws AlreadyPaidException {
+        
+        Tramite tramite = pago.getTramite();
+        
         if (tramite.getPago() != null) {
+            throw new AlreadyPaidException("La " + (tramite.getClass().getAnnotation(DiscriminatorValue.class).value()) + " ya fue pagada.");
+        } else {
             entityManager.getTransaction().begin();
             tramite.setPago(pago);
             entityManager.merge(tramite);
             entityManager.getTransaction().commit();
-        } else {
-            throw new AlreadyPaidException("La " + (tramite.getClass().getAnnotation(DiscriminatorValue.class).value()) + " ya fue pagada.");
         }
     }
 }

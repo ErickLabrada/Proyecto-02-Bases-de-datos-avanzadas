@@ -22,5 +22,5 @@ public interface ITramiteDAO {
         
     void eliminar (EntityManager entityManager, Long idTramite);
     
-    void addPago(EntityManager entityManager, Tramite tramite, Pago pago);
+    void addPago(EntityManager entityManager, Pago pago);
 }

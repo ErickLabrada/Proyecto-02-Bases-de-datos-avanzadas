@@ -3,16 +3,15 @@
  */
 package com.mycompany.proyecto02.basesdedatosavanzadas;
 
+import com.itson.daos.CarroDAO;
+import com.itson.daos.LicenciaDAO;
+import com.itson.daos.PagoDAO;
 import com.itson.daos.PersonaDAO;
-import com.itson.dominio.Carro;
-import com.itson.dominio.Licencia;
-import com.itson.dominio.Pago;
-import com.itson.dominio.Persona;
-import com.itson.dominio.Placa;
+import com.itson.daos.PlacaDAO;
+import com.itson.daos.TramiteDAO;
 import com.itson.dominio.Vigencia;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,9 +28,24 @@ public class Proyecto02BasesDeDatosAvanzadas {
     public static void main(String[] args) {
 
                 
-        
+      
         PersonaDAO personaDAO = new PersonaDAO();
+        CarroDAO carroDAO = new CarroDAO();
+        PagoDAO pagoDAO = new PagoDAO();
+        PlacaDAO placaDAO = new PlacaDAO();
+        LicenciaDAO licenciaDAO = new LicenciaDAO();
+        TramiteDAO tramiteDAO= new TramiteDAO();
+
         personaDAO.insertar(entityManager, true, LocalDate.now(), "Persona genérica", "RFCGenerico", "NumGenerico", new ArrayList());
+        licenciaDAO.insertar(entityManager, personaDAO.consultar(entityManager, 1L), null, Vigencia.ONE_YEAR);
+        carroDAO.insertar(entityManager, "Rojo", "Recta", "Razer", "Bonito", "HIMYM", null);
+        placaDAO.insertar(entityManager, "ABC-123", LocalDate.now(), true, null, carroDAO.consultar(entityManager, 1L));
+
+        pagoDAO.insertar(entityManager, 1500, LocalDate.now(), tramiteDAO.consultar(entityManager, 1L));
+        tramiteDAO.addPago(entityManager, pagoDAO.consultar(entityManager, 2L));
+
+
+
 //        Licencia licencia = createLicencias(Vigencia.ONE_YEAR, (createPagos(1500, LocalDate.now())), personaDAO.consultar(entityManager, 1L));
 //        insertLicencias(licencia);
 //        personaDAO.addTramites(entityManager, personaDAO.consultar(entityManager, 1L), licencia);
@@ -53,72 +67,6 @@ public class Proyecto02BasesDeDatosAvanzadas {
         //Pago pagoLicencia = createPagos(1500, LocalDate.now());
         //insertPagos(pagoLicencia);
 
-    }   
-    
-       public static void insertCarros(Carro carro, List placas) {
-    
-        carro.setPlacas(placas);
-        entityManager.getTransaction().begin();
-        entityManager.persist(carro);
-        entityManager.getTransaction().commit();
-    }
-       
-       public static Carro createCarro(String color, String linea, String marca, String modelo, String serie){
-           
-        Carro carro = new Carro();
-        carro.setColor(color);
-        carro.setLinea(linea);
-        carro.setMarca(marca);
-        carro.setModelo(modelo);
-        carro.setSerie(serie);
-        return carro;
+    }       
         
-       }
-
-    public static Pago createPagos(double monto, LocalDate fechaPago) {
-        Pago pago = new Pago();
-        pago.setFechaPago(fechaPago);
-        pago.setMonto(monto);
-        return pago;
-    }
-
-       public static void insertPagos(Pago pago){
-           entityManager.getTransaction().begin();
-           entityManager.persist(pago);
-           entityManager.getTransaction().commit();
-       }
-       
-       public static void insertLicencias(Licencia licencia){
-           entityManager.getTransaction().begin();
-           entityManager.persist(licencia);
-           entityManager.getTransaction().commit();
-       }
-       
-       public static Licencia createLicencias(Vigencia vigencia,Pago pago, Persona persona){
-           Licencia licencia = new Licencia();
-           licencia.setVigencia(vigencia);
-           licencia.setPago(pago);
-           licencia.setPersona(persona);
-           return licencia;
-       }
-       
-       public static void insertPlacas(Placa placas, Carro carro){
-           
-           placas.setVehiculo(carro);
-           entityManager.getTransaction().begin();
-           entityManager.persist(placas);
-           entityManager.getTransaction().commit();
-           
-       }
-
-       public static Placa createPlacas(String matricula,LocalDate fechaRecepcion, boolean estado, Pago pago){
-       
-           Placa placas = new Placa();
-           placas.setEstado(estado);
-           placas.setFechaRecepcion(fechaRecepcion);
-           placas.setPago(pago);
-           placas.setMatricula(matricula);
-           return placas;
-       
-       }
 }

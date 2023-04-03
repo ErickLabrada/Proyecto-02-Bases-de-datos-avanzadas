@@ -5,11 +5,8 @@
 package com.itson.interfaces;
 
 import com.itson.dominio.Pago;
-import com.itson.dominio.Persona;
-import com.itson.dominio.Tramite;
-import com.itson.dominio.Vigencia;
+import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
-import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
@@ -18,6 +15,6 @@ import javax.persistence.EntityManager;
  */
 public interface IPlacasDAO {
     
-    void insertar (EntityManager entityManager, String matricula, LocalDate fechaRecepcion, boolean estado, Pago pago);
+    void insertar (EntityManager entityManager, String matricula, LocalDate fechaRecepcion, boolean estado, Pago pago,Vehiculo vehiculo);
        
 }

@@ -6,6 +6,7 @@ package com.itson.daos;
 
 import com.itson.dominio.Carro;
 import com.itson.dominio.Placa;
+import com.itson.dominio.Vehiculo;
 import com.itson.interfaces.ICarroDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -31,5 +32,7 @@ public class CarroDAO extends VehiculoDAO implements ICarroDAO{
         entityManager.getTransaction().commit();
         
     }
+
+
     
 }
