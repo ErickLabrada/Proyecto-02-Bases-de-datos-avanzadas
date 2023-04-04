@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.swing.JFrame;
 
 /**
  *
@@ -68,6 +69,8 @@ public class PersonaDAO implements IPersonaDAO {
     @Override
     public void masiveInsert(EntityManager entityManager) {
 
+        try {
+        
         insertar(entityManager, false, LocalDate.of(1964, Month.MAY, 20), "John Constantine", "JCNSTNTN", "555-1234-5678");
         insertar(entityManager, false, LocalDate.of(1939, Month.JUNE, 6), "Bruce Wayne", "BRWN", "555-2345-6789");
         insertar(entityManager, true, LocalDate.of(1963, Month.AUGUST, 2), "Barbara Gordon", "BRBGRDN", "555-3456-7890");
@@ -88,7 +91,11 @@ public class PersonaDAO implements IPersonaDAO {
         insertar(entityManager, true, LocalDate.of(1999, Month.JANUARY, 1), "Maya López", "MYLPZ9", "555-7890-7564");
         insertar(entityManager, true, LocalDate.of(1984, Month.NOVEMBER, 1), "Jericho Wilson", "JRCWLSN", "555-3456-6718");
         insertar(entityManager, false, LocalDate.of(1984, Month.APRIL, 7), "Scott Pilgrim", "SCTPLGRM", "555-1234-1859");
-
+        
+        } catch (Exception e){
+            
+        }
+        
     }
 
     @Override

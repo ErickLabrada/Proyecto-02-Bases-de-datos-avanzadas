@@ -5,7 +5,7 @@ import javax.annotation.processing.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor", date="2023-04-03T01:34:26", comments="EclipseLink-2.7.10.v20211216-rNA")
+@Generated(value="org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor", date="2023-04-03T16:18:44", comments="EclipseLink-2.7.10.v20211216-rNA")
 @StaticMetamodel(Placa.class)
 public class Placa_ extends Tramite_ {
 

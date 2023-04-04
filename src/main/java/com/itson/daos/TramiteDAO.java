@@ -50,4 +50,7 @@ public class TramiteDAO implements ITramiteDAO {
             entityManager.getTransaction().commit();
         }
     }
+    
+    
+    
 }
