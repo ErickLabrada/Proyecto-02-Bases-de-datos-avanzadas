@@ -199,7 +199,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
             } else {
                 PlacaDAO placaDAO = new PlacaDAO();
                 
-                placaDAO.insert(entityManager,placaDAO.create(entityManager, LocalDate.now(), true, null, vehiculo, licenciaDAO), vehiculoDAO);
+                placaDAO.insert(entityManager,placaDAO.create(entityManager, LocalDate.now(), true, null, vehiculo, licenciaDAO, persona), vehiculoDAO);
                 vehiculoDAO.addPlacas(entityManager, vehiculo, (Placa) placaDAO.query(entityManager, 1l));
             }
             

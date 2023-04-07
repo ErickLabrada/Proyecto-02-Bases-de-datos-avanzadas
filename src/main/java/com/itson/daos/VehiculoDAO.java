@@ -21,12 +21,20 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
+ * Clase DAO para la entidad Vehiculo, implementa la interfaz IVehiculoDAO
  *
  * @author Erick
  */
 public class VehiculoDAO implements IVehiculoDAO {
     
-    
+    /**
+     * Método que busca y regresa de la base de datos un objeto de tipo Vehiculo con el ID especificado.
+     * 
+     * 
+     * @param entityManager
+     * @param idVehiculo
+     * @return Vehiculo con el ID especificado o Null en caso de no encontrar.
+     */
 
     @Override
     public Vehiculo query(EntityManager entityManager, Long idVehiculo) {
@@ -34,7 +42,12 @@ public class VehiculoDAO implements IVehiculoDAO {
         return entityManager.find(Vehiculo.class, idVehiculo);
 
     }
-
+/**
+     * Método que elimina de la base de datos un objeto de tipo vehiculo.
+     * 
+     * @param entityManager
+     * @param idVehiculo 
+     */
     @Override
     public void delete(EntityManager entityManager, Long idVehiculo) {
 
@@ -47,6 +60,13 @@ public class VehiculoDAO implements IVehiculoDAO {
         
     }
 
+    /**
+     * Método que agrega placas a un vehiculo
+     * @param entityManager
+     * @param vehiculo
+     * @param placa 
+     */
+    
     @Override
     public void addPlacas(EntityManager entityManager, Vehiculo vehiculo, Placa placa) {
 
@@ -58,6 +78,13 @@ public class VehiculoDAO implements IVehiculoDAO {
 
     }
 
+    
+    /**
+     * Método que actualiza el estado de las placas de un vehiculo.
+     * 
+     * @param entityManager
+     * @param vehiculo 
+     */
     @Override
     public void updatePlacas(EntityManager entityManager, Vehiculo vehiculo) {
 
@@ -69,11 +96,27 @@ public class VehiculoDAO implements IVehiculoDAO {
         entityManager.getTransaction().begin();
         entityManager.merge(vehiculo);
         entityManager.getTransaction().commit();
-        
+
     }
 
+    /**
+     * Método que mediante una consulta dinamica regresa una lista con todos los
+     * vehiculos registrados en la base de datos que cumplan con los parámetros de
+     * busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
+     * encontrar nada.
+     *
+     * @param entityManager
+     * @param id
+     * @param modelo
+     * @param linea
+     * @param color
+     * @param serie
+     * @param marca
+     * @throws EntityNotFoundException
+     * @return ArrayList<Vehiculo>
+     */
     @Override
-    public ArrayList<Vehiculo> getListaVehiculo(EntityManager entityManager, Long id, String modelo, String linea, String color, String serie, String marca) {
+    public ArrayList<Vehiculo> getListaVehiculo(EntityManager entityManager, Long id, String modelo, String linea, String color, String serie, String marca) throws EntityNotFoundException{
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vehiculo> criteriaQuery = criteriaBuilder.createQuery(Vehiculo.class);

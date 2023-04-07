@@ -22,16 +22,34 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
+ * Clase DAO para la entidad Persona, implementa la interfaz IPersonaDAO
+
  *
  * @author Erick
  */
 public class PersonaDAO implements IPersonaDAO {
 
+    /**
+     * Método que busca y regresa de la base de datos un objeto de tipo persona con el ID especificado.
+     * 
+     * 
+     * @param entityManager
+     * @param idPersona
+     * @return Persona con el ID especificado o Null en caso de no encontrar.
+     */
+    
     @Override
     public Persona query(EntityManager entityManager, Long idPersona) {
         return entityManager.find(Persona.class, idPersona);
     }
 
+    
+    /**
+     * Método que inserta a la base de datos un objeto de tipo persona.
+     * 
+     * @param entityManager
+     * @param persona 
+     */
     @Override
     public void insert(EntityManager entityManager, Persona persona) {
 
@@ -46,6 +64,13 @@ public class PersonaDAO implements IPersonaDAO {
         }
     }
 
+    
+    /**
+     * Método que elimina de la base de datos un objeto de tipo persona.
+     * 
+     * @param entityManager
+     * @param idPersona 
+     */
     @Override
     public void delete(EntityManager entityManager, Long idPersona) {
 
@@ -56,8 +81,19 @@ public class PersonaDAO implements IPersonaDAO {
 
     }
 
+    /**
+     * Método que le agrega un objeto de tipo tramite a una persona.
+     * Arroja una excepción del tipo "ProcedureNotFoundException" si el procedimiento
+     * no existe.
+     * 
+     * @param entityManager
+     * @param persona
+     * @param tramite 
+     * @throws ProcedureNotFoundException
+     */
+    
     @Override
-    public void addTramite(EntityManager entityManager, Persona persona, Tramite tramite) {
+    public void addTramite(EntityManager entityManager, Persona persona, Tramite tramite)throws ProcedureNotFoundException{
 
         if (tramite!=null){
         entityManager.getTransaction().begin();
@@ -66,7 +102,18 @@ public class PersonaDAO implements IPersonaDAO {
         entityManager.getTransaction().commit();
         } else {throw new ProcedureNotFoundException("El tramite que desea agregar no existe");}
     }
-
+    
+    
+/**
+ * Método que crea un objeto de tipo Persona.
+ * 
+ * @param discapacidad
+ * @param fechaNacimiento
+ * @param nombre
+ * @param rfc
+ * @param telefono
+ * @return Persona
+ */
     public Persona createPersona(boolean discapacidad, LocalDate fechaNacimiento, String nombre, String rfc, String telefono){
         Persona persona = new Persona();
         persona.setDiscapacidad(discapacidad);
@@ -78,10 +125,14 @@ public class PersonaDAO implements IPersonaDAO {
         return persona;
     }
     
+    
+    /**
+     * Método que inserta 20 personas a la base de datos (hardcodeado).
+     * 
+     * @param entityManager 
+     */
     @Override
     public void masiveInsert(EntityManager entityManager) {
-
-        try {
 
             insert(entityManager, createPersona(false, LocalDate.of(1964, Month.MAY, 20), "John Constantine", "JCNSTNTN", "555-1234-5678"));
             insert(entityManager, createPersona(false, LocalDate.of(1939, Month.JUNE, 6), "Bruce Wayne", "BRWN", "555-2345-6789"));
@@ -104,20 +155,42 @@ public class PersonaDAO implements IPersonaDAO {
             insert(entityManager, createPersona(true, LocalDate.of(1984, Month.NOVEMBER, 1), "Jericho Wilson", "JRCWLSN", "555-3456-6718"));
             insert(entityManager, createPersona(false, LocalDate.of(1984, Month.APRIL, 7), "Scott Pilgrim", "SCTPLGRM", "555-1234-1859"));
 
-        } catch (Exception e) {
-
-        }
 
     }
 
+    /**
+     * Método que verifica que una persona cumpla con los requisitos para realizar un tramite.
+     * 
+     * @param entityManager
+     * @param persona
+     * @return true si cumple los requisitos, false si no los cumple.
+     */
+    
     @Override
     public boolean checkPersona(EntityManager entityManager, Persona persona) {
 
         return persona.getRfc() != null && persona.getNombre() != null && persona.getFechaNacimiento() != null && persona.getTelefono() != null;
     }
 
+    
+    /**
+     * Método que mediante una consulta dinamica regresa una lista con todas las personas 
+     * registradas en la base de datos que cumplan con los parámetros de busqueda.
+     * Arroja una excepción "EntityNotFoundException" en caso de no encontrar nada. 
+     * 
+     * @param entityManager
+     * @param id
+     * @param discapacidad
+     * @param fechaInicio
+     * @param fechaFin
+     * @param nombre
+     * @param rfc
+     * @param telefono
+     * @throws EntityNotFoundException
+     * @return ArrayList<Persona>;
+     */
     @Override
-    public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono) {
+    public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono) throws EntityNotFoundException{
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Persona> criteriaQuery = criteriaBuilder.createQuery(Persona.class);

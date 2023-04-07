@@ -21,18 +21,34 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
- *
+ * Clase DAO para la entidad Pago, implementa la interfaz IPagoDAO
+ * 
  * @author Erick
  */
 public class PagoDAO implements IPagoDAO {
 
+    /**
+     * Método que busca y regresa de la base de datos un objeto de tipo Pago
+     * con el ID especificado.
+     *
+     *
+     * @param entityManager
+     * @param idPago
+     * @return Pago con el ID especificado o Null en caso de no encontrar.
+     */
     @Override
     public Pago query(EntityManager entityManager, Long idPago) {
 
         return entityManager.find(Pago.class, idPago);
 
     }
-
+    
+    /**
+     * Método que inserta a la base de datos un objeto de tipo Pago.
+     * 
+     * @param entityManager
+     * @param pago 
+     */
     @Override
     public void insert(EntityManager entityManager, Pago pago, TramiteDAO tramiteDAO) {
         
@@ -42,7 +58,12 @@ public class PagoDAO implements IPagoDAO {
         tramiteDAO.addPago(entityManager, pago);
         
     }
-
+/**
+     * Método que elimina de la base de datos un objeto de tipo pago.
+     * 
+     * @param entityManager
+     * @param idPago 
+     */
     @Override
     public void delete(EntityManager entityManager, Long idPago) {
 
@@ -56,8 +77,18 @@ public class PagoDAO implements IPagoDAO {
 
     }
 
+    /**
+     * Método que crea un objeto de tipo Pago. Arroja una excepción del tipo
+     * "ProcedureNotFoundException" si el tramite a pagar no existe
+     *
+     * @param monto
+     * @param fechaPago
+     * @param tramite
+     * @throws ProcedureNotFoundException
+     * @return Pago
+     */
     @Override
-    public Pago create(double monto, LocalDate fechaPago, Tramite tramite) {
+    public Pago create(double monto, LocalDate fechaPago, Tramite tramite) throws ProcedureNotFoundException{
         if (tramite != null) {
             Pago pago = new Pago();
             pago.setFechaPago(fechaPago);
@@ -69,9 +100,20 @@ public class PagoDAO implements IPagoDAO {
             throw new ProcedureNotFoundException("El tramite que desea pagar no existe");
         }
     }
-    
+    /***
+     * Método que mediante una consulta dinamica regresa una lista con todos los pagos 
+     * registrados en la base de datos que cumplan con los parámetros de busqueda.
+     * Arroja una excepción "EntityNotFoundException" en caso de no encontrar nada. 
+     * 
+     * @param entityManager
+     * @param id
+     * @param tramite
+     * @param fechaPago
+     * @throws EntityNotFoundException
+     * @return ArrayList<Pago>;
+     */
      @Override
-    public ArrayList<Pago> getListaPagos(EntityManager entityManager, Long id, Tramite tramite, LocalDate fechaPago) {
+    public ArrayList<Pago> getListaPagos(EntityManager entityManager, Long id, Tramite tramite, LocalDate fechaPago) throws EntityNotFoundException {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pago> criteriaQuery = criteriaBuilder.createQuery(Pago.class);

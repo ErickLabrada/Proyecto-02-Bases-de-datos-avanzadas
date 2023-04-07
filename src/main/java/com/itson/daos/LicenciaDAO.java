@@ -22,11 +22,18 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
+ *  
+ * Clase DAO para la entidad Licencia, implementa la interfaz ILicenciaDAO
  *
  * @author Erick
  */
 public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
-
+/**
+     * Método que inserta a la base de datos un objeto de tipo licencia.
+     * 
+     * @param entityManager
+     * @param licencia 
+     */
     @Override
     public void insert(EntityManager entityManager, Licencia licencia) {
 
@@ -35,9 +42,16 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         entityManager.getTransaction().commit();
 
     }
-
+    /**
+     * Método que verifica la vigencia de una licencia
+     * @param entityManager
+     * @param licencia
+     * @throws RuntimeException 
+     * @return true si está vigente, false si no
+    
+     */
     @Override
-    public boolean checkVality(EntityManager entityManager, Licencia licencia) {
+    public boolean checkVality(EntityManager entityManager, Licencia licencia) throws RuntimeException {
 
         LocalDate fechaVigencia;
 
@@ -53,7 +67,13 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
 
         return (licencia.getPago().getFechaPago().isBefore(fechaVigencia));
     }
-    
+    /**
+     * Método que obtiene una lista de todas las licencias registradas
+     * 
+     * @param entityManager
+     * @param personaID
+     * @return ArrayList<Licencia>
+     */
         @Override
     public ArrayList<Licencia> getLicencias(EntityManager entityManager, Long personaID) {
 
@@ -65,8 +85,16 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
 
     }
 
+    /**
+     * Método que verifica las licencias de una persona
+     *
+     * @param entityManager
+     * @param persona
+     * @throws InvalidLicenseException
+     * @return true si tiene una licencia vigente, false si no
+     */
     @Override
-    public boolean checkDriversLicense(EntityManager entityManager, Persona persona) {
+    public boolean checkDriversLicense(EntityManager entityManager, Persona persona) throws InvalidLicenseException {
 
         PersonaDAO personaDAO = new PersonaDAO();
         LicenciaDAO licenciaDAO = new LicenciaDAO();
@@ -80,6 +108,15 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         throw new InvalidLicenseException("La licencia ha caducado");
     }
 
+    /**
+     * Método que crea un objeto de tipo Licencia.
+     * 
+     * @param persona
+     * @param pago
+     * @param vigencia
+     * @return 
+     */
+    
     @Override
     public Licencia createLicencia(Persona persona, Pago pago, Vigencia vigencia) {
 
@@ -91,9 +128,22 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         return licencia;
         
     }
-    
+    /**
+     * Método que mediante una consulta dinamica regresa una lista con todas las
+     * licencias registradas en la base de datos que cumplan con los parámetros
+     * de busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
+     * encontrar nada.
+     * 
+     * @param entityManager
+     * @param id
+     * @param persona
+     * @param pago
+     * @param vigencia
+     * @throws EntityNotFoundException
+     * @return ArrayList<Licencia>
+     */
      @Override
-    public ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia) {
+    public ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia)throws EntityNotFoundException {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Licencia> criteriaQuery = criteriaBuilder.createQuery(Licencia.class);
