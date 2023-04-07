@@ -31,7 +31,7 @@ public abstract class Vehiculo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column (name = "Modelo", nullable = false)
     private String modelo;

@@ -4,17 +4,39 @@
  */
 package com.itson.Ventanas;
 
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import com.itson.daos.LicenciaDAO;
+import com.itson.dominio.Pago;
+import com.itson.dominio.Persona;
+import com.itson.dominio.Vigencia;
+import javax.swing.DefaultComboBoxModel;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 /**
  *
  * @author Erick
  */
 public class PantallaLicencia extends javax.swing.JFrame {
+    
+    public Persona persona;
+    
+
 
     /**
      * Creates new form PantallaLicencia
      */
     public PantallaLicencia() {
         initComponents();
+    }
+    
+    public PantallaLicencia (Persona persona, PantallaLicencia pantallaLicencia){
+        initComponents();
+        this.persona=persona;
+        textFieldPersona.setText(persona.getNombre());
+        comboBoxVigencia.setSelectedIndex(pantallaLicencia.comboBoxVigencia.getSelectedIndex());
+        
+        
+        
     }
 
     /**
@@ -28,15 +50,16 @@ public class PantallaLicencia extends javax.swing.JFrame {
 
         comboBoxVigencia = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textPaneCosto = new javax.swing.JTextPane();
         btnEscogePersona = new javax.swing.JButton();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textPaneCosto1 = new javax.swing.JTextPane();
+        textFieldPersona = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        comboBoxVigencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 Año", "2 Años", "3 Años" }));
+        comboBoxVigencia.setModel(new DefaultComboBoxModel<>(Vigencia.values()));
         comboBoxVigencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxVigenciaActionPerformed(evt);
@@ -46,11 +69,6 @@ public class PantallaLicencia extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Roboto Black", 0, 18)); // NOI18N
         jLabel1.setText("EXPEDICIÓN DE LICENCIAS");
 
-        textPaneCosto.setEditable(false);
-        textPaneCosto.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        textPaneCosto.setText("Costo: $1100");
-        jScrollPane1.setViewportView(textPaneCosto);
-
         btnEscogePersona.setText("Escoge persona");
         btnEscogePersona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,47 +77,61 @@ public class PantallaLicencia extends javax.swing.JFrame {
         });
 
         btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
+
+        textPaneCosto1.setEditable(false);
+        textPaneCosto1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        textPaneCosto1.setText("Costo: $1100");
+        jScrollPane2.setViewportView(textPaneCosto1);
+
+        textFieldPersona.setText("Persona:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(110, Short.MAX_VALUE)
+                .addContainerGap(111, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(242, 242, 242))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(comboBoxVigencia, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(110, 110, 110))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnEscogePersona, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(comboBoxVigencia, javax.swing.GroupLayout.Alignment.LEADING, 0, 500, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(textFieldPersona, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(109, 109, 109))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addComponent(jLabel1)
-                .addGap(61, 61, 61)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(textFieldPersona, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(comboBoxVigencia, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(129, Short.MAX_VALUE))
+                .addGap(84, 84, 84))
         );
 
         pack();
@@ -110,12 +142,25 @@ public class PantallaLicencia extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxVigenciaActionPerformed
 
     private void btnEscogePersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogePersonaActionPerformed
-
-         PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario();
+        
+         PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
          pantallaSeleccionPersona.setVisible(true);
+         this.dispose();
         
 
     }//GEN-LAST:event_btnEscogePersonaActionPerformed
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+
+        LicenciaDAO licenciaDAO = new LicenciaDAO();
+        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(persona, null, (Vigencia) comboBoxVigencia.getSelectedItem()));
+        showMessageDialog(null, "Licencia registrada");
+        PantallaInicio pantallaInicio = new PantallaInicio();
+        pantallaInicio.setVisible(true);
+        this.dispose();
+
+
+    }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,9 +202,10 @@ public class PantallaLicencia extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEscogePersona;
-    private javax.swing.JComboBox<String> comboBoxVigencia;
+    private javax.swing.JComboBox<Enum> comboBoxVigencia;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextPane textPaneCosto;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField textFieldPersona;
+    private javax.swing.JTextPane textPaneCosto1;
     // End of variables declaration//GEN-END:variables
 }

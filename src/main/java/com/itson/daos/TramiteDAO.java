@@ -6,12 +6,8 @@ package com.itson.daos;
 
 import com.itson.Exceptions.AlreadyPaidException;
 import com.itson.dominio.Pago;
-import com.itson.dominio.Persona;
 import com.itson.dominio.Tramite;
-import com.itson.dominio.Vigencia;
 import com.itson.interfaces.ITramiteDAO;
-import java.time.LocalDate;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 
 /**
@@ -21,12 +17,12 @@ import javax.persistence.EntityManager;
 public class TramiteDAO implements ITramiteDAO {
 
     @Override
-    public Tramite consultar(EntityManager entityManager, Long idTramite) {
+    public Tramite query(EntityManager entityManager, Long idTramite) {
         return entityManager.find(Tramite.class, idTramite);
     }
 
     @Override
-    public void eliminar(EntityManager entityManager, Long idTramite) {
+    public void delete(EntityManager entityManager, Long idTramite) {
         Tramite tramite = entityManager.find(Tramite.class, idTramite);
         if (tramite != null) {
             entityManager.getTransaction().begin();
@@ -37,12 +33,11 @@ public class TramiteDAO implements ITramiteDAO {
 
     @Override
     public void addPago(EntityManager entityManager, Pago pago) throws AlreadyPaidException {
-        
+
         Tramite tramite = pago.getTramite();
-        
+
         if (tramite.getPago() != null) {
-
-
+            throw new AlreadyPaidException("El tramite ya fue pagado");
         } else {
             entityManager.getTransaction().begin();
             tramite.setPago(pago);
@@ -50,7 +45,4 @@ public class TramiteDAO implements ITramiteDAO {
             entityManager.getTransaction().commit();
         }
     }
-    
-    
-    
 }

@@ -4,7 +4,9 @@
  */
 package com.itson.interfaces;
 
+import com.itson.dominio.Carro;
 import com.itson.dominio.Placa;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -14,6 +16,9 @@ import javax.persistence.EntityManager;
  */
 public interface ICarroDAO {
     
-    void insertar (EntityManager entityManager, String color, String linea, String marca, String modelo, String serie,List <Placa> placas);
+    void insert (EntityManager entityManager, Carro carro);
+ 
+    Carro createCarro(String color, String linea, String marca, String modelo, String serie,List <Placa> placas);
     
+    ArrayList <Carro> getListaCarros(EntityManager entityManager, Long id, String modelo, String linea, String Color, String Serie, String marca);
 }

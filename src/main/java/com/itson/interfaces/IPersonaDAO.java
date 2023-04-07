@@ -21,19 +21,20 @@ import javax.persistence.EntityManager;
 
 public interface IPersonaDAO {
     
-    Persona consultar (EntityManager entityManager, Long idPersona);
+    Persona query (EntityManager entityManager, Long idPersona);
     
-    void insertar (EntityManager entityManager, Boolean discapacidad, LocalDate fechaNacimiento, String nombre, String rfc, String telefono);
+    void insert (EntityManager entityManager, Persona persona);
     
-    void eliminar (EntityManager entityManager, Long idPersona);
+    void delete (EntityManager entityManager, Long idPersona);
     
-    void addTramites(EntityManager entityManager, Persona persona, Tramite tramite);
+    void addTramite(EntityManager entityManager, Persona persona, Tramite tramite);
     
     void masiveInsert(EntityManager entityManager);
     
-    boolean verificaPersona(EntityManager entityManager, Persona persona);
-    
-    ArrayList<Licencia> getLicencias(EntityManager entityManager, Long personaID);
+    boolean checkPersona(EntityManager entityManager, Persona persona);
 
+    ArrayList <Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono);
+    
+    
     
 }

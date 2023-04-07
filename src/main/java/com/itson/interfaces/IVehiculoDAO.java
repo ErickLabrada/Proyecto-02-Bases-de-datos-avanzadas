@@ -9,6 +9,7 @@ import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
 import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -18,12 +19,15 @@ import javax.persistence.EntityManager;
  */
 public interface IVehiculoDAO {
     
-    Vehiculo consultar (EntityManager entityManager, Long idVehiculo);
+    Vehiculo query (EntityManager entityManager, Long idVehiculo);
         
-    void eliminar (EntityManager entityManager, Long idVehiculo);
+    void delete (EntityManager entityManager, Long idVehiculo);
         
     void addPlacas(EntityManager entityManager, Vehiculo vehiculo, Placa placa);
 
     void updatePlacas(EntityManager entityManager, Vehiculo vehiculo);
 
+    ArrayList <Vehiculo> getListaVehiculo(EntityManager entityManager, Long id, String modelo, String linea, String Color, String Serie, String marca);
+
+    
 }

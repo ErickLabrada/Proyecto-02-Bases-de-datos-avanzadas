@@ -18,9 +18,9 @@ import javax.persistence.EntityManager;
  */
 public interface ITramiteDAO {
     
-    Tramite consultar (EntityManager entityManager, Long idTramite);
+    Tramite query (EntityManager entityManager, Long idTramite);
         
-    void eliminar (EntityManager entityManager, Long idTramite);
+    void delete (EntityManager entityManager, Long idTramite);
     
     void addPago(EntityManager entityManager, Pago pago);
 }

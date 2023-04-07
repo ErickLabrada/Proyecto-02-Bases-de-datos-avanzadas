@@ -4,9 +4,11 @@
  */
 package com.itson.interfaces;
 
+import com.itson.daos.LicenciaDAO;
 import com.itson.daos.VehiculoDAO;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
+import com.itson.dominio.Placa;
 import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,14 +20,17 @@ import javax.persistence.EntityManager;
  */
 public interface IPlacasDAO {
     
-    void insertar (EntityManager entityManager, LocalDate fechaRecepcion, boolean estado, Pago pago,Vehiculo vehiculo,VehiculoDAO vehiculoDAO, Persona persona);
+    void insert (EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO);
     
-    String generaMatricula(EntityManager entityManager);
+    String generateMatricula(EntityManager entityManager);
  
     ArrayList<String> getMatriculas(EntityManager entityManager);
     
-    public boolean verificaMatricula(String matricula, ArrayList<String> matriculas);
+    public boolean checkMatricula(String matricula, ArrayList<String> matriculas);
     
-    public boolean verificaLicenciaConductor(EntityManager entityManager, Persona persona);
-    
+    Placa create(EntityManager entityManager, LocalDate fechaRecepcion, boolean estado, Pago pago,Vehiculo vehiculo,LicenciaDAO licenciaDAO, Persona persona);
+
+    public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona);
+
+
 }

@@ -97,8 +97,8 @@ public class PantallaTramites extends javax.swing.JFrame {
             case 1:
                 PantallaPlacas pantallaPlacas = new PantallaPlacas();
                 this.setVisible(false);
-                pantallaPlacas.updateData();
                 pantallaPlacas.setVisible(true);
+
                 break;
             default:
                 //Me aburro mucho conectando las pantallas, dejar estos mensajes es lo único que me mantiene cuerdo en el proceso :b

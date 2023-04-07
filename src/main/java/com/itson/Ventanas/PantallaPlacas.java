@@ -5,7 +5,14 @@
 package com.itson.Ventanas;
 
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PlacaDAO;
+import com.itson.daos.VehiculoDAO;
+import com.itson.dominio.Persona;
+import com.itson.dominio.Placa;
+import com.itson.dominio.Vehiculo;
+import java.time.LocalDate;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -16,8 +23,20 @@ public class PantallaPlacas extends javax.swing.JFrame {
     /**
      * Creates new form PantallaPlacas
      */
+    
+    public Persona persona;
+    
     public PantallaPlacas() {
         initComponents();
+        updateData();
+        
+    }
+    
+    public PantallaPlacas(Persona persona, PantallaPlacas pantalla){
+        initComponents();
+        this.persona=persona;
+        textFieldPersona.setText(persona.getNombre());
+        textFieldPlacas.setText(pantalla.textFieldPlacas.getText());
     }
 
     /**
@@ -35,7 +54,12 @@ public class PantallaPlacas extends javax.swing.JFrame {
         textFieldPlacas = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        textFieldPersona = new javax.swing.JTextField();
         textFieldSerie = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,9 +74,14 @@ public class PantallaPlacas extends javax.swing.JFrame {
         });
 
         textFieldCosto.setEditable(false);
-        textFieldCosto.setText("Costo: $1,500");
+        textFieldCosto.setText("$1,500");
+        textFieldCosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldCostoActionPerformed(evt);
+            }
+        });
 
-        textFieldPlacas.setText("asdasd");
+        textFieldPlacas.setEditable(false);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -63,48 +92,83 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
         btnCancelar.setText("Cancelar");
 
-        textFieldSerie.setText("XYZ-987-ABC-123");
+        textFieldPersona.setEditable(false);
+        textFieldPersona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldPersonaActionPerformed(evt);
+            }
+        });
+
+        textFieldSerie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldSerieActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Número de serie:");
+
+        jLabel3.setText("Persona:");
+
+        jLabel4.setText("Costo:");
+
+        jLabel5.setText("Placas:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(258, 258, 258)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(110, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(textFieldCosto)
-                        .addComponent(textFieldPlacas)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                            .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(textFieldSerie)))
-                .addGap(110, 110, 110))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(textFieldCosto)
+                                .addComponent(textFieldPlacas)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(textFieldPersona)
+                                .addComponent(textFieldSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel1)
-                .addGap(42, 42, 42)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textFieldSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(2, 2, 2)
+                .addComponent(textFieldPersona, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textFieldCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textFieldPlacas, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(91, Short.MAX_VALUE))
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48))
         );
 
         pack();
@@ -112,22 +176,63 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
     private void btnEscogePersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogePersonaActionPerformed
 
-        PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario();
+        PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
         pantallaSeleccionPersona.setVisible(true);
+        this.dispose();
+
 
     }//GEN-LAST:event_btnEscogePersonaActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
-        String seie = textFieldSerie.getText();
-
+        LicenciaDAO licenciaDAO = new LicenciaDAO();
+        
+        if (licenciaDAO.checkDriversLicense(entityManager, persona)){
+            String serie = textFieldPersona.getText();
+            
+            VehiculoDAO vehiculoDAO=new VehiculoDAO();
+            Vehiculo vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null,textFieldSerie.getText(), null).get(0);
+            
+            if (vehiculo==null){
+                RegistroCarro registroCarro = new RegistroCarro();
+                this.setVisible(false);
+            } else {
+                PlacaDAO placaDAO = new PlacaDAO();
+                
+                placaDAO.insert(entityManager,placaDAO.create(entityManager, LocalDate.now(), true, null, vehiculo, licenciaDAO), vehiculoDAO);
+                vehiculoDAO.addPlacas(entityManager, vehiculo, (Placa) placaDAO.query(entityManager, 1l));
+            }
+            
+        }
+        else {
+            showMessageDialog(null, "La persona no tiene licencia vigente");
+        }
+        
+        
+        
+        
+        
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void textFieldPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldPersonaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldPersonaActionPerformed
+
+    private void textFieldSerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSerieActionPerformed
+
+        
+
+    }//GEN-LAST:event_textFieldSerieActionPerformed
+
+    private void textFieldCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldCostoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldCostoActionPerformed
 
     protected void updateData(){
         PlacaDAO placasDAO = new PlacaDAO();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Placas:");
-        stringBuilder.append(placasDAO.generaMatricula(entityManager));
+        stringBuilder.append(placasDAO.generateMatricula(entityManager));
         textFieldPlacas.setText(stringBuilder.toString());
     }
     
@@ -173,7 +278,12 @@ public class PantallaPlacas extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEscogePersona;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField textFieldCosto;
+    private javax.swing.JTextField textFieldPersona;
     private javax.swing.JTextField textFieldPlacas;
     private javax.swing.JTextField textFieldSerie;
     // End of variables declaration//GEN-END:variables

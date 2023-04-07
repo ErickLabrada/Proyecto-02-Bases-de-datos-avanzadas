@@ -28,9 +28,7 @@ import javax.persistence.Table;
 public class Licencia extends Tramite implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     @Column (name = "Vigencia", nullable = false)
     @Enumerated (EnumType.STRING)
@@ -45,14 +43,6 @@ public class Licencia extends Tramite implements Serializable {
 
     public void setVigencia(Vigencia vigencia) {
         this.vigencia = vigencia;
-    }
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

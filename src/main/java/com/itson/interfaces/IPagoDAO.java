@@ -4,11 +4,11 @@
  */
 package com.itson.interfaces;
 
+import com.itson.daos.TramiteDAO;
 import com.itson.dominio.Pago;
-import com.itson.dominio.Persona;
 import com.itson.dominio.Tramite;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
 /**
@@ -17,10 +17,15 @@ import javax.persistence.EntityManager;
  */
 public interface IPagoDAO {
     
-    Pago consultar (EntityManager entityManager, Long idPago);
+    Pago query (EntityManager entityManager, Long idPago);
     
-    void insertar (EntityManager entityManager, double monto, LocalDate fechaPago, Tramite tramine);
+    void insert (EntityManager entityManager, Pago pago, TramiteDAO tramiteDAO);
     
-    void eliminar (EntityManager entityManager, Long idPago);
+    void delete (EntityManager entityManager, Long idPago);
+    
+    Pago create (double monto, LocalDate fechaPago, Tramite tramine);
         
+    public ArrayList<Pago> getListaPagos(EntityManager entityManager, Long id, Tramite tramite, LocalDate fechaPago);
+
+    
 }

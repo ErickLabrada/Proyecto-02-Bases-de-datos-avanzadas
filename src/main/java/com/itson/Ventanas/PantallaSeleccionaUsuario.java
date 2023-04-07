@@ -4,15 +4,30 @@
  */
 package com.itson.Ventanas;
 
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import com.itson.daos.PersonaDAO;
+import com.itson.dominio.Persona;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 /**
  *
  * @author Erick
  */
 public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
 
+    private JFrame previousJFrame;
+    private ArrayList<Persona> listaPersonas;
     /**
      * Creates new form PantallaConsulta
      */
+    public PantallaSeleccionaUsuario(JFrame previousJFrame) {
+        initComponents();
+        this.previousJFrame=previousJFrame;
+    }
+
     public PantallaSeleccionaUsuario() {
         initComponents();
     }
@@ -27,44 +42,39 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        textFieldRFC = new javax.swing.JTextField();
+        textFieldNombre = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListUsuarios = new javax.swing.JList<>();
-        textFieldRFC1 = new javax.swing.JTextField();
+        textFieldRFC = new javax.swing.JTextField();
         textFieldRFC2 = new javax.swing.JTextField();
         btnEscoger = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Roboto Black", 0, 18)); // NOI18N
         jLabel1.setText("SELECCIONA USUARIO");
 
+        textFieldNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textFieldNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldNombreActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(jListUsuarios);
+
         textFieldRFC.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textFieldRFC.setText("Pedro PicaPiedra");
         textFieldRFC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldRFCActionPerformed(evt);
             }
         });
 
-        jListUsuarios.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jListUsuarios);
-
-        textFieldRFC1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textFieldRFC1.setText("PIPP290504SAA");
-        textFieldRFC1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldRFC1ActionPerformed(evt);
-            }
-        });
-
         textFieldRFC2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textFieldRFC2.setText("30/09/1960");
         textFieldRFC2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldRFC2ActionPerformed(evt);
@@ -72,8 +82,27 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
         });
 
         btnEscoger.setText("Escoger");
+        btnEscoger.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEscogerActionPerformed(evt);
+            }
+        });
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
+        jLabel2.setText("Nombre:");
+
+        jLabel3.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
+        jLabel3.setText("Año Nacimiento:");
+
+        jLabel4.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
+        jLabel4.setText("RFC:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,12 +120,17 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
                             .addComponent(textFieldRFC, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldRFC1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(jLabel4)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnEscoger, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(btnEscoger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addGap(50, 50, 50))
         );
@@ -105,17 +139,21 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(textFieldRFC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
-                        .addComponent(textFieldRFC1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldRFC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEscoger, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -126,13 +164,60 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void textFieldNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldNombreActionPerformed
+
     private void textFieldRFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFCActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldRFCActionPerformed
 
-    private void textFieldRFC1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFC1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldRFC1ActionPerformed
+    private void btnEscogerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogerActionPerformed
+
+        PersonaDAO personaDAO = new PersonaDAO();
+
+        if (!jListUsuarios.getSize().equals(0)) {
+            Integer index = jListUsuarios.getSelectedIndex();
+            Persona persona = personaDAO.query(entityManager, listaPersonas.get(index).getId());
+
+            if (previousJFrame.getClass().equals(PantallaPlacas.class)) {
+
+                previousJFrame = new PantallaPlacas(persona, (PantallaPlacas) previousJFrame);
+
+            } else if (previousJFrame.getClass().equals(PantallaLicencia.class)) {
+
+                previousJFrame = new PantallaLicencia(persona, (PantallaLicencia) previousJFrame);
+            }
+
+            previousJFrame.setVisible(true);
+            this.dispose();
+        } else {
+
+            showMessageDialog(null, "Escoja a una persona");
+        }
+
+    }//GEN-LAST:event_btnEscogerActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+        DefaultListModel<String> model = new DefaultListModel<>();
+
+        PersonaDAO personaDAO = new PersonaDAO();
+
+        String nombre = textFieldNombre.getText();
+        String rfc = textFieldRFC.getText();
+
+         listaPersonas = personaDAO.getListaPersonas(entityManager, null, null, null, null, nombre, rfc, null);
+
+        for (Persona persona : listaPersonas) {
+            model.addElement(persona.getNombre());
+        }
+        
+        jListUsuarios.setModel(model);
+
+        
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void textFieldRFC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFC2ActionPerformed
         // TODO add your handling code here:
@@ -180,10 +265,13 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEscoger;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<String> jListUsuarios;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    protected javax.swing.JList<String> jListUsuarios;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField textFieldNombre;
     private javax.swing.JTextField textFieldRFC;
-    private javax.swing.JTextField textFieldRFC1;
     private javax.swing.JTextField textFieldRFC2;
     // End of variables declaration//GEN-END:variables
 }

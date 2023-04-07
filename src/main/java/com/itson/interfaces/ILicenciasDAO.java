@@ -8,6 +8,7 @@ import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Vigencia;
+import java.util.ArrayList;
 import javax.persistence.EntityManager;
 
 /**
@@ -16,8 +17,16 @@ import javax.persistence.EntityManager;
  */
 public interface ILicenciasDAO {
 
-    void insertar(EntityManager entityManager, Persona persona, Pago pago, Vigencia vigencia);
+    void insert(EntityManager entityManager, Licencia licencia);
 
-    boolean verificaVigencia(EntityManager entityManager, Licencia licencia);
+    boolean checkVality(EntityManager entityManager, Licencia licencia);
+
+    ArrayList<Licencia> getLicencias(EntityManager entityManager, Long personaID);
+
+    public boolean checkDriversLicense(EntityManager entityManager, Persona persona);
+
+    Licencia createLicencia (Persona persona, Pago pago, Vigencia vigencia);
     
+    ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia);
+
 }
