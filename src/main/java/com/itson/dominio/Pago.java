@@ -6,6 +6,7 @@ package com.itson.dominio;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class Pago implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy="Pago")
+    @OneToOne(cascade={CascadeType.REMOVE},mappedBy="Pago")
     private Tramite tramite;
     
     public Long getId() {

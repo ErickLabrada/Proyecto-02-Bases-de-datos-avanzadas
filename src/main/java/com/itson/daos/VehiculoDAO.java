@@ -4,11 +4,9 @@
  */
 package com.itson.daos;
 
-import com.itson.dominio.Persona;
 import com.itson.dominio.Placa;
 import com.itson.dominio.Vehiculo;
 import com.itson.interfaces.IVehiculoDAO;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -26,83 +24,78 @@ import javax.persistence.criteria.Root;
  * @author Erick
  */
 public class VehiculoDAO implements IVehiculoDAO {
-    
+
     /**
-     * Método que busca y regresa de la base de datos un objeto de tipo Vehiculo con el ID especificado.
-     * 
-     * 
+     * Método que busca y regresa de la base de datos un objeto de tipo Vehiculo
+     * con el ID especificado.
+     *
+     *
      * @param entityManager
      * @param idVehiculo
      * @return Vehiculo con el ID especificado o Null en caso de no encontrar.
      */
-
     @Override
     public Vehiculo query(EntityManager entityManager, Long idVehiculo) {
 
         return entityManager.find(Vehiculo.class, idVehiculo);
 
     }
-/**
+
+    /**
      * Método que elimina de la base de datos un objeto de tipo vehiculo.
-     * 
+     *
      * @param entityManager
-     * @param idVehiculo 
+     * @param idVehiculo
      */
     @Override
     public void delete(EntityManager entityManager, Long idVehiculo) {
 
         Vehiculo vehiculo = entityManager.find(Vehiculo.class, idVehiculo);
-        if (vehiculo!=null){
+        if (vehiculo != null) {
             entityManager.getTransaction().begin();
             entityManager.remove(vehiculo);
-            entityManager.getTransaction().commit();        }
-        
-        
+            entityManager.getTransaction().commit();
+        }
     }
 
     /**
      * Método que agrega placas a un vehiculo
+     *
      * @param entityManager
      * @param vehiculo
-     * @param placa 
+     * @param placa
      */
-    
     @Override
     public void addPlacas(EntityManager entityManager, Vehiculo vehiculo, Placa placa) {
-
         updatePlacas(entityManager, vehiculo);
         vehiculo.getPlacas().add(placa);
         entityManager.getTransaction().begin();
         entityManager.merge(vehiculo);
         entityManager.getTransaction().commit();
-
+        
     }
 
-    
     /**
      * Método que actualiza el estado de las placas de un vehiculo.
-     * 
+     *
      * @param entityManager
-     * @param vehiculo 
+     * @param vehiculo
      */
     @Override
     public void updatePlacas(EntityManager entityManager, Vehiculo vehiculo) {
-
         List<Placa> placas = vehiculo.getPlacas();
-
         for (Placa placa : placas) {
             placa.setEstado(false);
-        }
         entityManager.getTransaction().begin();
         entityManager.merge(vehiculo);
         entityManager.getTransaction().commit();
-
+        }
     }
 
     /**
      * Método que mediante una consulta dinamica regresa una lista con todos los
-     * vehiculos registrados en la base de datos que cumplan con los parámetros de
-     * busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
+     * vehiculos registrados en la base de datos que cumplan con los parámetros
+     * de busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
      * encontrar nada.
      *
      * @param entityManager
@@ -116,7 +109,7 @@ public class VehiculoDAO implements IVehiculoDAO {
      * @return ArrayList<Vehiculo>
      */
     @Override
-    public ArrayList<Vehiculo> getListaVehiculo(EntityManager entityManager, Long id, String modelo, String linea, String color, String serie, String marca) throws EntityNotFoundException{
+    public ArrayList<Vehiculo> getListaVehiculo(EntityManager entityManager, Long id, String modelo, String linea, String color, String serie, String marca) throws EntityNotFoundException {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vehiculo> criteriaQuery = criteriaBuilder.createQuery(Vehiculo.class);
@@ -128,7 +121,7 @@ public class VehiculoDAO implements IVehiculoDAO {
         ArrayList<Predicate> criteria = new ArrayList<Predicate>();
 
         if (id != null) {
-            
+
             ParameterExpression<Long> parametro = criteriaBuilder.parameter(Long.class, "id");
             criteria.add(criteriaBuilder.equal(vehiculo.get("id"), parametro));
 
@@ -189,8 +182,8 @@ public class VehiculoDAO implements IVehiculoDAO {
 
         ArrayList<Vehiculo> resultados = new ArrayList();
         resultados.addAll(query.getResultList());
-        
-        if(resultados.isEmpty()){
+
+        if (resultados.isEmpty()) {
             throw new EntityNotFoundException("No se encontraron vehiculos con los datos proporcionados");
         }
         return resultados;

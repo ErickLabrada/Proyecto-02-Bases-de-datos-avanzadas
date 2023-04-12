@@ -6,7 +6,6 @@ package com.itson.daos;
 
 import com.itson.dominio.Carro;
 import com.itson.dominio.Placa;
-import com.itson.dominio.Vehiculo;
 import com.itson.interfaces.ICarroDAO;
 import java.util.ArrayList;
 import java.util.List;

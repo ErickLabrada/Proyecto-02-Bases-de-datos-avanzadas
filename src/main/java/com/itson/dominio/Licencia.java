@@ -34,7 +34,18 @@ public class Licencia extends Tramite implements Serializable {
     @Enumerated (EnumType.STRING)
     private Vigencia vigencia;
     
+    @Column(name = "Estado", nullable = false)
+    private boolean estado;
+    
     public Licencia() {
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public Vigencia getVigencia() {

@@ -6,7 +6,6 @@ package com.itson.daos;
 
 import com.itson.Exceptions.InvalidLicenseException;
 import com.itson.Exceptions.UnpaidProcedureException;
-import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Placa;
@@ -26,34 +25,39 @@ import javax.persistence.criteria.Root;
 
 /**
  * Clase DAO para la entidad Placa, implementa la interfaz IPlacasDAO
- * 
+ *
  * @author Erick
  */
 public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
 
-     
     /**
      * Mértodo que inserta a la base de datos un objeto de tipo placa.
-     * 
+     *
      * @param entityManager
-     * @param placa 
+     * @param placa
+     * @param vehiculoDAO
+     * @throws UnpaidProcedureException
+     * @throws InvalidLicenseException
      */
-    
     @Override
-    public void insert(EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO) throws InvalidLicenseException {
-                
+    public void insert(EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO) throws InvalidLicenseException, UnpaidProcedureException{
+        
+        if (checkPreviousPayments(entityManager, placa)){
         entityManager.getTransaction().begin();
         entityManager.persist(placa);
         entityManager.getTransaction().commit();
         vehiculoDAO.addPlacas(entityManager, placa.getVehiculo(), placa);
-
+        } else {
+            throw new UnpaidProcedureException("Aun no se han pagado las placas anteriores del vehiculo");
+        }
     }
-/**
- * Método que génera de manera aleatoria una matricula única
- * 
- * @param entityManager
- * @return String matricula
- */
+
+    /**
+     * Método que génera de manera aleatoria una matricula única
+     *
+     * @param entityManager
+     * @return String matricula
+     */
     @Override
     public String generateMatricula(EntityManager entityManager) {
 
@@ -88,10 +92,10 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
 
     /**
      * Método que obtiene una lista de todas las matriculas registradas
+     *
      * @param entityManager
      * @return ArrayList<String>
      */
-    
     @Override
     public ArrayList<String> getMatriculas(EntityManager entityManager) {
 
@@ -99,12 +103,28 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
         return new ArrayList(query.getResultList());
 
     }
-/**
- * Verifica que la mátricula no exista en la base de datos
- * @param matricula
- * @param matriculas
- * @return true si no existe, false si existe
- */
+    /**
+     * Método que obtiene una lista de todas las licencias registradas a nombre de una persona
+     *
+     * @param entityManager
+     * @param personaID
+     * @return ArrayList<Licencia>
+     */
+    @Override
+    public ArrayList<Placa> getPlacas(EntityManager entityManager, Long vehiculoID) {
+
+        TypedQuery<Placa> query = entityManager.createQuery("SELECT p FROM Placa p WHERE p.vehiculo.id = :vehiculoID", Placa.class);
+        query.setParameter("vehiculoID", vehiculoID);
+        ArrayList<Placa> placas = new ArrayList<Placa>(query.getResultList());
+            return placas;
+    }
+    /**
+     * Verifica que la mátricula no exista en la base de datos
+     *
+     * @param matricula
+     * @param matriculas
+     * @return true si no existe, false si existe
+     */
     @Override
     public boolean checkMatricula(String matricula, ArrayList<String> matriculas) {
 
@@ -113,35 +133,55 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
             if (matriculaActual.equals(matricula)) {
                 return false;
             }
-
         }
         return true;
     }
-/**
- * Método que crea un objeto de tipo Placa
- * 
- * @param entityManager
- * @param fechaRecepcion
- * @param estado
- * @param pago
- * @param vehiculo
- * @param licenciaDAO
- * @param persona
- * @throws InvalidLicenseException
- * @return Placa
- */
-    @Override
-    public Placa create(EntityManager entityManager, LocalDate fechaRecepcion, boolean estado, Pago pago, Vehiculo vehiculo,  LicenciaDAO licenciaDAO, Persona persona) throws InvalidLicenseException {
 
-        Placa placa = new Placa();
+    @Override
+    public boolean checkPreviousPayments(EntityManager entityManager,Placa placa ){
         
-        if (!licenciaDAO.checkDriversLicense(entityManager,persona)){
-            throw new InvalidLicenseException();
+
+
+        ArrayList <Placa> listaPlacas = new ArrayList<Placa>(getPlacas(entityManager, placa.getVehiculo().getId()));
+        
+        if (listaPlacas.isEmpty()){
+            return true;
         }
         
-        placa.setEstado(estado);
-        placa.setFechaRecepcion(fechaRecepcion);
+        for (Placa placaIndex: listaPlacas){
+            if(placaIndex.getPago()==null){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    /**
+     * Método que crea un objeto de tipo Placa
+     *
+     * @param entityManager
+     * @param fechaRecepcion
+     * @param estado
+     * @param pago
+     * @param vehiculo
+     * @param licenciaDAO
+     * @param persona
+     * @throws InvalidLicenseException
+     * @return Placa
+     */
+    @Override
+    public Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona) throws InvalidLicenseException {
 
+        Placa placa = new Placa();
+
+        if (!licenciaDAO.checkDriversLicense(entityManager, persona)) {
+            throw new InvalidLicenseException();
+        }
+
+        placa.setEstado(true);
+        placa.setFechaRecepcion(fechaRecepcion);
+        placa.setPersona(persona);
         placa.setMatricula(generateMatricula(entityManager));
         placa.setPago(pago);
         placa.setVehiculo(vehiculo);
@@ -152,8 +192,8 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
 
     /**
      * Método que mediante una consulta dinamica regresa una lista con todas las
-     * placas registradas en la base de datos que cumplan con los parámetros
-     * de busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
+     * placas registradas en la base de datos que cumplan con los parámetros de
+     * busqueda. Arroja una excepción "EntityNotFoundException" en caso de no
      * encontrar nada.
      *
      * @param entityManager
@@ -167,7 +207,7 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
      * @return ArrayList<Placa>;
      */
     @Override
-    public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona) throws EntityNotFoundException{
+    public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona) throws EntityNotFoundException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Placa> criteriaQuery = criteriaBuilder.createQuery(Placa.class);
         Root<Placa> placa = criteriaQuery.from(Placa.class);
@@ -199,8 +239,8 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
             ParameterExpression<Persona> parametro = criteriaBuilder.parameter(Persona.class, "persona");
             criteria.add(criteriaBuilder.equal(placa.get("persona"), parametro));
         }
-        if(criteria.size()==0){}
-        else if (criteria.size()==1){
+        if (criteria.size() == 0) {
+        } else if (criteria.size() == 1) {
             criteriaQuery.where(criteria.get(0));
         } else {
             criteriaQuery.where(criteriaBuilder.and(criteria.toArray(new Predicate[0])));
@@ -219,16 +259,16 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
             query.setParameter("pago", pago);
         }
         if (vehiculo != null) {
-            query.setParameter("vehiculo",vehiculo);
+            query.setParameter("vehiculo", vehiculo);
         }
         if (persona != null) {
-            query.setParameter("persona",persona);
+            query.setParameter("persona", persona);
         }
 
         ArrayList<Placa> resultados = new ArrayList();
         resultados.addAll(query.getResultList());
-        
-        if(resultados.isEmpty()){
+
+        if (resultados.isEmpty()) {
             throw new EntityNotFoundException("No se encontraron placas con los datos proporcionados");
         }
         return resultados;

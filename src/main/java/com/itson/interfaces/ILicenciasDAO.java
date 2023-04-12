@@ -27,6 +27,8 @@ public interface ILicenciasDAO {
 
     Licencia createLicencia (Persona persona, Pago pago, Vigencia vigencia);
     
-    ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia);
+    void updateLicencias(EntityManager entityManager, Persona persona);
+    
+    ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia, Boolean estado);
 
 }

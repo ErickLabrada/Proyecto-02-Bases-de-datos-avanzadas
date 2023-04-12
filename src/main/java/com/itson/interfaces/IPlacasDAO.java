@@ -23,13 +23,17 @@ public interface IPlacasDAO {
     void insert (EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO);
     
     String generateMatricula(EntityManager entityManager);
- 
-    ArrayList<String> getMatriculas(EntityManager entityManager);
-    
-    public boolean checkMatricula(String matricula, ArrayList<String> matriculas);
-    
-    Placa create(EntityManager entityManager, LocalDate fechaRecepcion, boolean estado, Pago pago,Vehiculo vehiculo,LicenciaDAO licenciaDAO, Persona persona);
 
+    ArrayList<String> getMatriculas(EntityManager entityManager);
+
+    public boolean checkMatricula(String matricula, ArrayList<String> matriculas);
+
+    Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona);
+
+    public boolean checkPreviousPayments(EntityManager entityManager, Placa placa);
+
+     ArrayList<Placa> getPlacas(EntityManager entityManager, Long vehiculoID);
+    
     public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona);
 
 
