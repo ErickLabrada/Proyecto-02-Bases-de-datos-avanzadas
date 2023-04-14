@@ -3,6 +3,7 @@
  */
 package com.itson.Ventanas;
 
+import com.itson.Utilidades.EncriptadorSecreto;
 import com.itson.daos.CarroDAO;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PagoDAO;
@@ -35,20 +36,20 @@ public class Proyecto02BasesDeDatosAvanzadas {
 
     public static void main(String[] args) {
 
-//        PantallaInicio mainScreen = new PantallaInicio();
-//        mainScreen.setVisible(true);
-        personaDAO.masiveInsert(entityManager);
-        registraLicencias();
-        pagarTramite(tramiteDAO.query(entityManager, 1L));
-        pagarTramite(tramiteDAO.query(entityManager, 2L));
-        pagarTramite(tramiteDAO.query(entityManager, 3L));
-        pagarTramite(tramiteDAO.query(entityManager, 4L));
-        pagarTramite(tramiteDAO.query(entityManager, 5L));
-        pagarTramite(tramiteDAO.query(entityManager, 6L));
-        registraCarros();
-        registraPlacas();
-        pagoDAO.delete(entityManager,1L);
-        //placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 1L),licenciaDAO, personaDAO.query(entityManager,1l)), vehiculoDAO);
+        
+        PantallaInicio mainScreen = new PantallaInicio();
+        mainScreen.setVisible(true);
+//        personaDAO.masiveInsert(entityManager);
+//        registraLicencias();
+//        pagarTramite(tramiteDAO.query(entityManager, 1L));
+//        pagarTramite(tramiteDAO.query(entityManager, 2L));
+//        pagarTramite(tramiteDAO.query(entityManager, 3L));
+//        pagarTramite(tramiteDAO.query(entityManager, 4L));
+//        pagarTramite(tramiteDAO.query(entityManager, 5L));
+//        pagarTramite(tramiteDAO.query(entityManager, 6L));
+//        registraCarros();
+//        registraPlacas();
+//        pagoDAO.delete(entityManager,1L);
 
 //
 //        //Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono

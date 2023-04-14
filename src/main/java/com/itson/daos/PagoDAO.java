@@ -4,15 +4,14 @@
  */
 package com.itson.daos;
 
+import com.itson.Exceptions.AlreadyPaidException;
 import com.itson.Exceptions.ProcedureNotFoundException;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
-import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
 import com.itson.interfaces.IPagoDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
@@ -53,12 +52,16 @@ public class PagoDAO implements IPagoDAO {
      */
     @Override
     public void insert(EntityManager entityManager, Pago pago, TramiteDAO tramiteDAO) {
-
+        
+         if (pago.getTramite().getPago() != null) {
+            throw new AlreadyPaidException("El tramite ya fue pagado");
+        } else {
         entityManager.getTransaction().begin();
         entityManager.persist(pago);
         entityManager.getTransaction().commit();
         tramiteDAO.addPago(entityManager, pago);
-
+       
+         }
     }
 
     /**

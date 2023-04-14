@@ -4,9 +4,9 @@
  */
 package com.itson.Ventanas;
 
+import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import com.itson.daos.LicenciaDAO;
-import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Vigencia;
 import javax.swing.DefaultComboBoxModel;
@@ -18,9 +18,8 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class PantallaLicencia extends javax.swing.JFrame {
     
-    public Persona persona;
-    
-
+    public Persona selectedPersona;
+    public EncriptadorSecreto encriptador = new EncriptadorSecreto();
 
     /**
      * Creates new form PantallaLicencia
@@ -28,16 +27,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
     public PantallaLicencia() {
         initComponents();
     }
-    
-    public PantallaLicencia (Persona persona, PantallaLicencia pantallaLicencia){
-        initComponents();
-        this.persona=persona;
-        textFieldPersona.setText(persona.getNombre());
-        comboBoxVigencia.setSelectedIndex(pantallaLicencia.comboBoxVigencia.getSelectedIndex());
-        
-        
-        
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -138,22 +128,22 @@ public class PantallaLicencia extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxVigenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxVigenciaActionPerformed
-        // TODO add your handling code here:
+
+
     }//GEN-LAST:event_comboBoxVigenciaActionPerformed
 
     private void btnEscogePersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogePersonaActionPerformed
         
          PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
          pantallaSeleccionPersona.setVisible(true);
-         this.dispose();
-        
+         this.setVisible(false);
 
     }//GEN-LAST:event_btnEscogePersonaActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
         LicenciaDAO licenciaDAO = new LicenciaDAO();
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(persona, null, (Vigencia) comboBoxVigencia.getSelectedItem()));
+        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(selectedPersona, null, (Vigencia) comboBoxVigencia.getSelectedItem()));
         showMessageDialog(null, "Licencia registrada");
         PantallaInicio pantallaInicio = new PantallaInicio();
         pantallaInicio.setVisible(true);
@@ -162,6 +152,12 @@ public class PantallaLicencia extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnAceptarActionPerformed
 
+        public void getPersona(PantallaSeleccionaUsuario pantallaSeleccionPersona){
+        selectedPersona=pantallaSeleccionPersona.sendPersona();
+        textFieldPersona.setText(encriptador.desencriptar(selectedPersona.getNombre()));
+
+    }
+    
     /**
      * @param args the command line arguments
      */

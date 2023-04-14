@@ -4,8 +4,9 @@
  */
 package com.itson.Ventanas;
 
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import com.itson.daos.TramiteDAO;
-import com.itson.dominio.Vigencia;
+import com.itson.dominio.Persona;
 
 /**
  *
@@ -13,6 +14,8 @@ import com.itson.dominio.Vigencia;
  */
 public class PantallaHistorial extends javax.swing.JFrame {
 
+    private Persona persona;
+    
     /**
      * Creates new form PantallaHistorial
      */
@@ -120,8 +123,7 @@ public class PantallaHistorial extends javax.swing.JFrame {
 
         TramiteDAO tramiteDAO = new TramiteDAO();
         
-        
-        tramiteDAO.getListaTramites(entityManager, null, persona, null, null);
+        tramiteDAO.getListaTramites(entityManager, null, persona, null, null, null);
 
     }//GEN-LAST:event_btnAceptarActionPerformed
 

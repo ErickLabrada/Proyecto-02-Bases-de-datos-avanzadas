@@ -4,6 +4,7 @@
  */
 package com.itson.Ventanas;
 
+import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PlacaDAO;
@@ -12,6 +13,7 @@ import com.itson.dominio.Persona;
 import com.itson.dominio.Placa;
 import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
+import javax.persistence.EntityNotFoundException;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
@@ -23,21 +25,19 @@ public class PantallaPlacas extends javax.swing.JFrame {
     /**
      * Creates new form PantallaPlacas
      */
+    private Vehiculo vehiculo;
+    private Persona selectedPersona;
+    private EncriptadorSecreto encriptador = new EncriptadorSecreto();
     
-    public Persona persona;
+
     
     public PantallaPlacas() {
         initComponents();
         updateData();
         
     }
-    
-    public PantallaPlacas(Persona persona, PantallaPlacas pantalla){
-        initComponents();
-        this.persona=persona;
-        textFieldPersona.setText(persona.getNombre());
-        textFieldPlacas.setText(pantalla.textFieldPlacas.getText());
-    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -178,40 +178,43 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
         PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
         pantallaSeleccionPersona.setVisible(true);
-        this.dispose();
-
-
+        this.setVisible(false);
     }//GEN-LAST:event_btnEscogePersonaActionPerformed
 
+    public void getPersona(PantallaSeleccionaUsuario pantallaSeleccionPersona){
+        selectedPersona=pantallaSeleccionPersona.sendPersona();
+        textFieldPersona.setText(encriptador.desencriptar(selectedPersona.getNombre()));
+      
+    }
+
+    public void getVehiculo(RegistroVehiculo registroVehiculo) {
+        vehiculo = registroVehiculo.sendVehiculo();
+    }
+    
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
         LicenciaDAO licenciaDAO = new LicenciaDAO();
         
-        if (licenciaDAO.checkDriversLicense(entityManager, persona)){
-            String serie = textFieldPersona.getText();
+        if (licenciaDAO.checkDriversLicense(entityManager, selectedPersona)){
             
-            VehiculoDAO vehiculoDAO=new VehiculoDAO();
-            Vehiculo vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null,textFieldSerie.getText(), null).get(0);
-            
-            if (vehiculo==null){
-                RegistroCarro registroCarro = new RegistroCarro();
+            VehiculoDAO vehiculoDAO = new VehiculoDAO();
+            try {
+                vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, textFieldSerie.getText(), null).get(0);
+            } catch (EntityNotFoundException e) {
+                RegistroVehiculo registroVehiculo = new RegistroVehiculo(this, textFieldSerie.getText());
                 this.setVisible(false);
-            } else {
-                PlacaDAO placaDAO = new PlacaDAO();
-                
-                placaDAO.insert(entityManager,placaDAO.create(entityManager, LocalDate.now(), true, null, vehiculo, licenciaDAO, persona), vehiculoDAO);
-                vehiculoDAO.addPlacas(entityManager, vehiculo, (Placa) placaDAO.query(entityManager, 1l));
+                registroVehiculo.setVisible(true);
             }
-            
-        }
-        else {
+            if (vehiculo != null) {
+                PlacaDAO placaDAO = new PlacaDAO();
+                placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, vehiculo, licenciaDAO, selectedPersona), vehiculoDAO);
+                PantallaInicio pantallaInicio = new PantallaInicio();
+                pantallaInicio.setVisible(true);
+                this.dispose();
+            }
+        } else {
             showMessageDialog(null, "La persona no tiene licencia vigente");
         }
-        
-        
-        
-        
-        
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void textFieldPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldPersonaActionPerformed
@@ -235,7 +238,6 @@ public class PantallaPlacas extends javax.swing.JFrame {
         stringBuilder.append(placasDAO.generateMatricula(entityManager));
         textFieldPlacas.setText(stringBuilder.toString());
     }
-    
     
     /**
      * @param args the command line arguments

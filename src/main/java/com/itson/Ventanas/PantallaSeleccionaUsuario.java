@@ -4,6 +4,7 @@
  */
 package com.itson.Ventanas;
 
+import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import com.itson.daos.PersonaDAO;
 import com.itson.dominio.Persona;
@@ -18,15 +19,35 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
 
+    private EncriptadorSecreto encriptador=new EncriptadorSecreto();
     private JFrame previousJFrame;
+    private PantallaPlacas pantallaPlacas;
+    private PantallaLicencia pantallaLicencia;
     private ArrayList<Persona> listaPersonas;
+    private PantallaSeleccionaTramite pantallaTramite;
+    private Persona selectedPersona;
     /**
      * Creates new form PantallaConsulta
      */
-    public PantallaSeleccionaUsuario(JFrame previousJFrame) {
+    
+    public PantallaSeleccionaUsuario(PantallaSeleccionaTramite pantallaTramite) {
         initComponents();
-        this.previousJFrame=previousJFrame;
+        this.previousJFrame=pantallaTramite;
+        this.pantallaTramite=pantallaTramite;
     }
+    
+    public PantallaSeleccionaUsuario(PantallaPlacas pantallaPlacas) {
+        initComponents();
+        this.previousJFrame=pantallaPlacas;
+        this.pantallaPlacas=pantallaPlacas;
+    }
+    
+    public PantallaSeleccionaUsuario(PantallaLicencia pantallaLicencia) {
+        initComponents();
+        this.previousJFrame=pantallaLicencia;
+        this.pantallaLicencia=pantallaLicencia;
+    }
+
 
     public PantallaSeleccionaUsuario() {
         initComponents();
@@ -178,15 +199,14 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
 
         if (!jListUsuarios.getSize().equals(0)) {
             Integer index = jListUsuarios.getSelectedIndex();
-            Persona persona = personaDAO.query(entityManager, listaPersonas.get(index).getId());
+            this.selectedPersona = personaDAO.query(entityManager, listaPersonas.get(index).getId());
 
             if (previousJFrame.getClass().equals(PantallaPlacas.class)) {
-
-                previousJFrame = new PantallaPlacas(persona, (PantallaPlacas) previousJFrame);
-
+                pantallaPlacas.getPersona(this);
             } else if (previousJFrame.getClass().equals(PantallaLicencia.class)) {
-
-                previousJFrame = new PantallaLicencia(persona, (PantallaLicencia) previousJFrame);
+                pantallaLicencia.getPersona(this);
+            }else if (previousJFrame.getClass().equals(PantallaSeleccionaTramite.class)) {
+                pantallaTramite.getPersona(this);
             }
 
             previousJFrame.setVisible(true);
@@ -200,6 +220,7 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
 
+        
         DefaultListModel<String> model = new DefaultListModel<>();
 
         PersonaDAO personaDAO = new PersonaDAO();
@@ -210,7 +231,7 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
          listaPersonas = personaDAO.getListaPersonas(entityManager, null, null, null, null, nombre, rfc, null);
 
         for (Persona persona : listaPersonas) {
-            model.addElement(persona.getNombre());
+            model.addElement(encriptador.desencriptar(persona.getNombre()));
         }
         
         jListUsuarios.setModel(model);
@@ -219,6 +240,10 @@ public class PantallaSeleccionaUsuario extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    public Persona sendPersona(){
+        return selectedPersona;
+    }
+    
     private void textFieldRFC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFC2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldRFC2ActionPerformed

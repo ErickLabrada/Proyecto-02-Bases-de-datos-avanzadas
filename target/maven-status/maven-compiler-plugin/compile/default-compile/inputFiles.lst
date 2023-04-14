@@ -2,9 +2,12 @@ C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\m
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPlacasDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaInicio.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaPlacas.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\RegistroVehiculo.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaSeleccionaTramite.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Persona.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\LicenciaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\TramiteDAO.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Utilidades\EncriptadorSecreto.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PrototiposDeInterfaz.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Carro.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaGeneraReporte.java
@@ -25,8 +28,8 @@ C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\m
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IVehiculoDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\CarroDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaTramites.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaAdministraPagos.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaReporte.java
-C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\RegistroCarro.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PlacaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Exceptions\ProcedureNotFoundException.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Placa.java

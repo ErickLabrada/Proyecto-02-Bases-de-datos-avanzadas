@@ -70,14 +70,12 @@ public class TramiteDAO implements ITramiteDAO {
 
         Tramite tramite = pago.getTramite();
 
-        if (tramite.getPago() != null) {
-            throw new AlreadyPaidException("El tramite ya fue pagado");
-        } else {
+       
             entityManager.getTransaction().begin();
             tramite.setPago(pago);
             entityManager.merge(tramite);
             entityManager.getTransaction().commit();
-        }
+
     }
     
     public ArrayList<Tramite> getListaTramites(EntityManager entityManager, Long id, Persona persona, Pago pago, Vigencia vigencia, Vehiculo vehiculo) throws EntityNotFoundException {

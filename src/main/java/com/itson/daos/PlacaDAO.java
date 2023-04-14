@@ -76,13 +76,13 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
                 char letra = letras.charAt(index);
                 stringBuilder.append(letra);
             }
-
             stringBuilder.append("-");
             for (int i = 0; i < 3; i++) {
                 int index = random.nextInt(numeros.length());
                 char numero = numeros.charAt(index);
                 stringBuilder.append(numero);
             }
+            
 
             matricula = stringBuilder.toString();
         } while (!checkMatricula(matricula, getMatriculas(entityManager)));
@@ -90,7 +90,12 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
 
     }
 
-    /**
+    /**stringBuilder.append("-");
+            for (int i = 0; i < 3; i++) {
+                int index = random.nextInt(numeros.length());
+                char numero = numeros.charAt(index);
+                stringBuilder.append(numero);
+            }
      * Método que obtiene una lista de todas las matriculas registradas
      *
      * @param entityManager
@@ -140,8 +145,6 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
     @Override
     public boolean checkPreviousPayments(EntityManager entityManager,Placa placa ){
         
-
-
         ArrayList <Placa> listaPlacas = new ArrayList<Placa>(getPlacas(entityManager, placa.getVehiculo().getId()));
         
         if (listaPlacas.isEmpty()){

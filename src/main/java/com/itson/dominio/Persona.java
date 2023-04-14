@@ -42,7 +42,7 @@ public class Persona implements Serializable {
     @Column (name = "Discapacidad", nullable = false)
     private boolean discapacidad;
     
-    @Column (name = "RFC", nullable = false)
+    @Column (unique=true, name = "RFC", nullable = false)
     private String rfc;
 
     @OneToMany(mappedBy="persona")

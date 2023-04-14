@@ -5,11 +5,9 @@
 package com.itson.daos;
 
 import com.itson.Exceptions.ProcedureNotFoundException;
-import com.itson.dominio.Licencia;
+import com.itson.Utilidades.EncriptadorSecreto;
 import com.itson.dominio.Persona;
-import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
-import com.itson.dominio.Vigencia;
 import com.itson.interfaces.IPersonaDAO;
 import java.time.LocalDate;
 import java.time.Month;
@@ -32,6 +30,9 @@ import javax.persistence.criteria.Root;
  */
 public class PersonaDAO implements IPersonaDAO {
 
+    public static EncriptadorSecreto encriptador = new EncriptadorSecreto();
+
+    
     /**
      * Método que busca y regresa de la base de datos un objeto de tipo persona
      * con el ID especificado.
@@ -54,7 +55,8 @@ public class PersonaDAO implements IPersonaDAO {
      */
     @Override
     public void insert(EntityManager entityManager, Persona persona) {
-
+        System.out.println(persona.getNombre());
+        persona.setNombre(encriptador.encriptar(persona.getNombre()));
         List<Tramite> tramites = new ArrayList();
         persona.setTramite(tramites);
         if (checkPersona(entityManager, persona)) {
@@ -192,6 +194,9 @@ public class PersonaDAO implements IPersonaDAO {
      */
     @Override
     public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono) throws EntityNotFoundException {
+        System.out.println(nombre);
+        nombre = encriptador.encriptar(nombre);
+        System.out.println(nombre);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Persona> criteriaQuery = criteriaBuilder.createQuery(Persona.class);

@@ -5,7 +5,6 @@
 package com.itson.dominio;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;

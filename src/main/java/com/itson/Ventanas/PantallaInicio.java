@@ -30,12 +30,21 @@ public class PantallaInicio extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnReportes1 = new javax.swing.JButton();
         btnTramites = new javax.swing.JButton();
         btnHistorial = new javax.swing.JButton();
         btnReportes = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnInsertMasivo = new javax.swing.JButton();
+        btnPagos = new javax.swing.JButton();
+
+        btnReportes1.setText("Reportes");
+        btnReportes1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportes1ActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,6 +86,13 @@ public class PantallaInicio extends javax.swing.JFrame {
             }
         });
 
+        btnPagos.setText("Pagos");
+        btnPagos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,7 +107,8 @@ public class PantallaInicio extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnInsertMasivo, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                    .addComponent(btnInsertMasivo, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                    .addComponent(btnPagos, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -106,10 +123,12 @@ public class PantallaInicio extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnReportes)
                 .addGap(18, 18, 18)
+                .addComponent(btnPagos)
+                .addGap(18, 18, 18)
                 .addComponent(btnInsertMasivo)
                 .addGap(18, 18, 18)
                 .addComponent(btnExit)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(46, 46, 46))
         );
 
         pack();
@@ -120,6 +139,7 @@ public class PantallaInicio extends javax.swing.JFrame {
         this.setVisible(false);
         PantallaTramites pantallaTramite = new PantallaTramites(); 
         pantallaTramite.setVisible(rootPaneCheckingEnabled);
+        this.setVisible(false);
 
     }//GEN-LAST:event_btnTramitesActionPerformed
 
@@ -134,6 +154,7 @@ public class PantallaInicio extends javax.swing.JFrame {
 
         PantallaGeneraReporte pantallaGeneraReporte = new PantallaGeneraReporte();
         pantallaGeneraReporte.setVisible(true);
+        this.setVisible(false);
 
     }//GEN-LAST:event_btnReportesActionPerformed
 
@@ -144,13 +165,28 @@ public class PantallaInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnInsertMasivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertMasivoActionPerformed
-
+        try{
         PersonaDAO personaDAO=new PersonaDAO();
         personaDAO.masiveInsert(entityManager);
         showMessageDialog(null, "Personas almacenadas correctamente");
-
+        } catch (Exception e){
+            System.out.println(e.toString());
+            showMessageDialog(null, "No puede insertar el mismo rfc más de una vez");
+        }
 
     }//GEN-LAST:event_btnInsertMasivoActionPerformed
+
+    private void btnReportes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportes1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportes1ActionPerformed
+
+    private void btnPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagosActionPerformed
+
+        PantallaAdministraPagos administradorPagos = new PantallaAdministraPagos();
+        administradorPagos.setVisible(true);
+        this.setVisible(false);
+
+    }//GEN-LAST:event_btnPagosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,7 +230,9 @@ public class PantallaInicio extends javax.swing.JFrame {
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInsertMasivo;
+    private javax.swing.JButton btnPagos;
     private javax.swing.JButton btnReportes;
+    private javax.swing.JButton btnReportes1;
     private javax.swing.JButton btnTramites;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
