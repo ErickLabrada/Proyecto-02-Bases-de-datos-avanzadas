@@ -6,6 +6,7 @@ package com.itson.Ventanas;
 
 import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Vigencia;
@@ -17,9 +18,11 @@ import static javax.swing.JOptionPane.showMessageDialog;
  * @author Erick
  */
 public class PantallaLicencia extends javax.swing.JFrame {
-    
-    public Persona selectedPersona;
-    public EncriptadorSecreto encriptador = new EncriptadorSecreto();
+
+    private Persona selectedPersona;
+    private EncriptadorSecreto encriptador = new EncriptadorSecreto();
+    private LicenciaDAO licenciaDAO = new LicenciaDAO();
+
 
     /**
      * Creates new form PantallaLicencia
@@ -74,6 +77,11 @@ public class PantallaLicencia extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         textPaneCosto1.setEditable(false);
         textPaneCosto1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
@@ -125,6 +133,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxVigenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxVigenciaActionPerformed
@@ -134,7 +143,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
 
     private void btnEscogePersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogePersonaActionPerformed
         
-         PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
+         PantallaSeleccionaPersona pantallaSeleccionPersona = new PantallaSeleccionaPersona(this);
          pantallaSeleccionPersona.setVisible(true);
          this.setVisible(false);
 
@@ -142,18 +151,31 @@ public class PantallaLicencia extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
-        LicenciaDAO licenciaDAO = new LicenciaDAO();
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(selectedPersona, null, (Vigencia) comboBoxVigencia.getSelectedItem()));
-        showMessageDialog(null, "Licencia registrada");
-        PantallaInicio pantallaInicio = new PantallaInicio();
-        pantallaInicio.setVisible(true);
-        this.dispose();
+        
+        
+        if (selectedPersona != null) {
+            if (licenciaDAO.checkPreviousPayments(entityManager, selectedPersona)) {
 
-
+                licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(selectedPersona, null, (Vigencia) comboBoxVigencia.getSelectedItem()));
+                showMessageDialog(null, "Licencia registrada");
+                mainScreen.setVisible(true);
+                this.dispose();
+            } else{
+                showMessageDialog(null, "Aun no ha pagado la licencia anterior");
+            }
+        } else {
+            showMessageDialog(null, "Escoja una persona");
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-        public void getPersona(PantallaSeleccionaUsuario pantallaSeleccionPersona){
-        selectedPersona=pantallaSeleccionPersona.sendPersona();
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        mainScreen.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    public void getPersona(PantallaSeleccionaPersona pantallaSeleccionPersona) {
+        selectedPersona = pantallaSeleccionPersona.sendPersona();
         textFieldPersona.setText(encriptador.desencriptar(selectedPersona.getNombre()));
 
     }

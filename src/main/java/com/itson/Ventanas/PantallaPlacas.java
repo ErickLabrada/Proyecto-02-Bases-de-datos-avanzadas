@@ -6,11 +6,11 @@ package com.itson.Ventanas;
 
 import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PlacaDAO;
 import com.itson.daos.VehiculoDAO;
 import com.itson.dominio.Persona;
-import com.itson.dominio.Placa;
 import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
 import javax.persistence.EntityNotFoundException;
@@ -51,7 +51,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnEscogePersona = new javax.swing.JButton();
         textFieldCosto = new javax.swing.JTextField();
-        textFieldPlacas = new javax.swing.JTextField();
+        textFieldMatricula = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         textFieldPersona = new javax.swing.JTextField();
@@ -81,7 +81,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
             }
         });
 
-        textFieldPlacas.setEditable(false);
+        textFieldMatricula.setEditable(false);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +91,11 @@ public class PantallaPlacas extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         textFieldPersona.setEditable(false);
         textFieldPersona.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +116,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
         jLabel4.setText("Costo:");
 
-        jLabel5.setText("Placas:");
+        jLabel5.setText("Matricula:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,7 +135,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
                             .addComponent(btnEscogePersona, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(textFieldCosto)
-                                .addComponent(textFieldPlacas)
+                                .addComponent(textFieldMatricula)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -163,7 +168,7 @@ public class PantallaPlacas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textFieldPlacas, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(textFieldMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,48 +177,63 @@ public class PantallaPlacas extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEscogePersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogePersonaActionPerformed
 
-        PantallaSeleccionaUsuario pantallaSeleccionPersona = new PantallaSeleccionaUsuario(this);
+        PantallaSeleccionaPersona pantallaSeleccionPersona = new PantallaSeleccionaPersona(this);
         pantallaSeleccionPersona.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnEscogePersonaActionPerformed
 
-    public void getPersona(PantallaSeleccionaUsuario pantallaSeleccionPersona){
-        selectedPersona=pantallaSeleccionPersona.sendPersona();
+    public void getPersona(PantallaSeleccionaPersona pantallaSeleccionPersona) {
+        selectedPersona = pantallaSeleccionPersona.sendPersona();
         textFieldPersona.setText(encriptador.desencriptar(selectedPersona.getNombre()));
-      
+
     }
 
     public void getVehiculo(RegistroVehiculo registroVehiculo) {
         vehiculo = registroVehiculo.sendVehiculo();
     }
-    
+
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
         LicenciaDAO licenciaDAO = new LicenciaDAO();
-        
-        if (licenciaDAO.checkDriversLicense(entityManager, selectedPersona)){
-            
-            VehiculoDAO vehiculoDAO = new VehiculoDAO();
-            try {
-                vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, textFieldSerie.getText(), null).get(0);
-            } catch (EntityNotFoundException e) {
-                RegistroVehiculo registroVehiculo = new RegistroVehiculo(this, textFieldSerie.getText());
-                this.setVisible(false);
-                registroVehiculo.setVisible(true);
+
+        if (selectedPersona != null) {
+            if (!selectedPersona.getTramite().isEmpty()) {
+                if (!textFieldSerie.getText().isBlank()) {
+                    if (licenciaDAO.checkDriversLicense(entityManager, selectedPersona)) {
+
+                        VehiculoDAO vehiculoDAO = new VehiculoDAO();
+                        try {
+                            vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, textFieldSerie.getText(), null).get(0);
+                        } catch (EntityNotFoundException e) {
+                            RegistroVehiculo registroVehiculo = new RegistroVehiculo(this, textFieldSerie.getText());
+                            this.setVisible(false);
+                            registroVehiculo.setVisible(true);
+                        }
+                        if (vehiculo != null) {
+                            PlacaDAO placaDAO = new PlacaDAO();
+                            placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, vehiculo, licenciaDAO, selectedPersona, textFieldMatricula.getText().substring(7)), vehiculoDAO);
+                            showMessageDialog(null, "Placa registrada");
+                            mainScreen.setVisible(true);
+                            this.dispose();
+                        }
+                    } else {
+                        showMessageDialog(null, "La persona no tiene licencia activa");
+                    }
+                } else {
+                    showMessageDialog(null, "Ingrese un número de serie");
+                }
+            } else {
+                System.out.println(selectedPersona.getTramite());
+                showMessageDialog(null, "La persona no tiene licencia");
             }
-            if (vehiculo != null) {
-                PlacaDAO placaDAO = new PlacaDAO();
-                placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, vehiculo, licenciaDAO, selectedPersona), vehiculoDAO);
-                PantallaInicio pantallaInicio = new PantallaInicio();
-                pantallaInicio.setVisible(true);
-                this.dispose();
-            }
+
         } else {
-            showMessageDialog(null, "La persona no tiene licencia vigente");
+            showMessageDialog(null, "Escoja una persona");
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -223,20 +243,25 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
     private void textFieldSerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSerieActionPerformed
 
-        
-
     }//GEN-LAST:event_textFieldSerieActionPerformed
 
     private void textFieldCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldCostoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldCostoActionPerformed
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        
+        mainScreen.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
     protected void updateData(){
         PlacaDAO placasDAO = new PlacaDAO();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Placas:");
         stringBuilder.append(placasDAO.generateMatricula(entityManager));
-        textFieldPlacas.setText(stringBuilder.toString());
+        textFieldMatricula.setText(stringBuilder.toString());
     }
     
     /**
@@ -285,8 +310,8 @@ public class PantallaPlacas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField textFieldCosto;
+    private javax.swing.JTextField textFieldMatricula;
     private javax.swing.JTextField textFieldPersona;
-    private javax.swing.JTextField textFieldPlacas;
     private javax.swing.JTextField textFieldSerie;
     // End of variables declaration//GEN-END:variables
 }

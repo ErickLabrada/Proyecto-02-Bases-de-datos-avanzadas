@@ -9,6 +9,7 @@ import com.itson.Exceptions.UnpaidProcedureException;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Placa;
+import com.itson.dominio.Tramite;
 import com.itson.dominio.Vehiculo;
 import com.itson.interfaces.IPlacasDAO;
 import java.time.LocalDate;
@@ -19,6 +20,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -91,13 +94,6 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
     }
 
     /**stringBuilder.append("-");
-            for (int i = 0; i < 3; i++) {
-                int index = random.nextInt(numeros.length());
-                char numero = numeros.charAt(index);
-                stringBuilder.append(numero);
-            }
-     * Método que obtiene una lista de todas las matriculas registradas
-     *
      * @param entityManager
      * @return ArrayList<String>
      */
@@ -141,7 +137,13 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
         }
         return true;
     }
-
+/**
+ * Método que revisa si las placas anteriores han sido pagadas
+ * 
+ * @param entityManager
+ * @param placa
+ * @return 
+ */
     @Override
     public boolean checkPreviousPayments(EntityManager entityManager,Placa placa ){
         
@@ -174,7 +176,7 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
      * @return Placa
      */
     @Override
-    public Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona) throws InvalidLicenseException {
+    public Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona, String matricula) throws InvalidLicenseException {
 
         Placa placa = new Placa();
 
@@ -182,10 +184,10 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
             throw new InvalidLicenseException();
         }
 
-        placa.setEstado(true);
+        placa.setEstado(false);
         placa.setFechaRecepcion(fechaRecepcion);
         placa.setPersona(persona);
-        placa.setMatricula(generateMatricula(entityManager));
+        placa.setMatricula(matricula);
         placa.setPago(pago);
         placa.setVehiculo(vehiculo);
 
@@ -210,10 +212,13 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
      * @return ArrayList<Placa>;
      */
     @Override
-    public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona) throws EntityNotFoundException {
+    public ArrayList<Placa> getListaPlacas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona, LocalDate desde, LocalDate hasta) throws EntityNotFoundException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Placa> criteriaQuery = criteriaBuilder.createQuery(Placa.class);
         Root<Placa> placa = criteriaQuery.from(Placa.class);
+       
+        Join<Placa, Pago> pagoJoin = placa.join("pago", JoinType.INNER);
+
         criteriaQuery.select(placa);
         criteriaQuery.distinct(true);
         StringBuilder stringBuilder;
@@ -221,6 +226,15 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
         if (id != null) {
             ParameterExpression<Long> parametro = criteriaBuilder.parameter(Long.class, "id");
             criteria.add(criteriaBuilder.equal(placa.get("id"), parametro));
+        }
+        if (desde != null) {
+
+            ParameterExpression<LocalDate> parametro = criteriaBuilder.parameter(LocalDate.class, "desde");
+            criteria.add(criteriaBuilder.greaterThanOrEqualTo(pagoJoin.get("fechaPago"), parametro));
+        }
+        if (hasta != null) {
+            ParameterExpression<LocalDate> parametro = criteriaBuilder.parameter(LocalDate.class, "hasta");
+            criteria.add(criteriaBuilder.lessThanOrEqualTo(pagoJoin.get("fechaPago"),parametro));
         }
         if (estado != null) {
             ParameterExpression<Boolean> parametro = criteriaBuilder.parameter(Boolean.class, "estado");
@@ -254,6 +268,12 @@ public class PlacaDAO extends TramiteDAO implements IPlacasDAO {
         }
         if (estado != null) {
             query.setParameter("estado", estado);
+        }
+        if (desde != null) {
+            query.setParameter("desde", desde);
+        }
+        if (hasta != null) {
+            query.setParameter("hasta", hasta);
         }
         if (fechaRecepcion != null) {
             query.setParameter("fechaRecepcion", fechaRecepcion);

@@ -3,7 +3,6 @@
  */
 package com.itson.Ventanas;
 
-import com.itson.Utilidades.EncriptadorSecreto;
 import com.itson.daos.CarroDAO;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PagoDAO;
@@ -33,12 +32,15 @@ public class Proyecto02BasesDeDatosAvanzadas {
     static LicenciaDAO licenciaDAO = new LicenciaDAO();
     static TramiteDAO tramiteDAO = new TramiteDAO();
     static VehiculoDAO vehiculoDAO = new VehiculoDAO();
+    static PantallaInicio mainScreen= new PantallaInicio();
 
     public static void main(String[] args) {
 
-        
         PantallaInicio mainScreen = new PantallaInicio();
         mainScreen.setVisible(true);
+
+        System.out.println(tramiteDAO.query(entityManager, 3L));
+        
 //        personaDAO.masiveInsert(entityManager);
 //        registraLicencias();
 //        pagarTramite(tramiteDAO.query(entityManager, 1L));
@@ -50,7 +52,6 @@ public class Proyecto02BasesDeDatosAvanzadas {
 //        registraCarros();
 //        registraPlacas();
 //        pagoDAO.delete(entityManager,1L);
-
 //
 //        //Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono
 //        ArrayList<Vehiculo> listaVehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, null, null);
@@ -68,38 +69,39 @@ public class Proyecto02BasesDeDatosAvanzadas {
 //            System.out.println("-------------------------------------");
 //
 //        }
-//System.out.println(personaDAO.consultar(entityManager,1l));
-//System.out.println(tramiteDAO.consultar(entityManager, 1l));
-    }
+//              System.out.println(personaDAO.consultar(entityManager,1l));
+//              System.out.println(tramiteDAO.consultar(entityManager, 1l));
+    }  }
+//
+//    public static void pagarTramite(Tramite tramite) {
+//        pagoDAO.insert(entityManager, pagoDAO.create(1500, LocalDate.now(), tramite), tramiteDAO);
+//    }
+//
+//    public static void registraLicencias() {
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 1L), null, Vigencia.ONE_YEAR));
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.ONE_YEAR));
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.TWO_YEARS));
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.THREE_YEARS));
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 3L), null, Vigencia.ONE_YEAR));
+//        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 3L), null, Vigencia.THREE_YEARS));
+//    }
+//
+//    public static void registraCarros() {
+//        carroDAO.insert(entityManager, carroDAO.createCarro("Rojo", "Recta", "Razer", "Bonito", "HIMYM", null));
+//        carroDAO.insert(entityManager, carroDAO.createCarro("Verde", "Curva", "SteelSeries", "feo", "The Office", null));
+//        carroDAO.insert(entityManager, carroDAO.createCarro("Azul", "Oblicua", "Hyperx", "Bonito", "HIMYF", null));
+//        carroDAO.insert(entityManager, carroDAO.createCarro("Morado", "Recta", "Logitech", "meh", "TLOU", null));
+//        carroDAO.insert(entityManager, carroDAO.createCarro("Rojo", "Curva", "Razer", "feo", "Brooklyn99", null));
+//    }
 
-    public static void pagarTramite(Tramite tramite) {
-        pagoDAO.insert(entityManager, pagoDAO.create(1500, LocalDate.now(), tramite), tramiteDAO);
-    }
-    public static void registraLicencias() {
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 1L), null, Vigencia.ONE_YEAR));
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.ONE_YEAR));
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.TWO_YEARS));
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 2L), null, Vigencia.THREE_YEARS));
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 3L), null, Vigencia.ONE_YEAR));
-        licenciaDAO.insert(entityManager, licenciaDAO.createLicencia(personaDAO.query(entityManager, 3L), null, Vigencia.THREE_YEARS));
-    }
-
-    public static void registraCarros() {
-        carroDAO.insert(entityManager, carroDAO.createCarro("Rojo", "Recta", "Razer", "Bonito", "HIMYM", null));
-        carroDAO.insert(entityManager, carroDAO.createCarro("Verde", "Curva", "SteelSeries", "feo", "The Office", null));
-        carroDAO.insert(entityManager, carroDAO.createCarro("Azul", "Oblicua", "Hyperx", "Bonito", "HIMYF", null));
-        carroDAO.insert(entityManager, carroDAO.createCarro("Morado", "Recta", "Logitech", "meh", "TLOU", null));
-        carroDAO.insert(entityManager, carroDAO.createCarro("Rojo", "Curva", "Razer", "feo", "Brooklyn99", null));
-    }
-
-    public static void registraPlacas(){
-        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 1L),licenciaDAO, personaDAO.query(entityManager,1l)), vehiculoDAO);
-        pagarTramite(tramiteDAO.query(entityManager, 7L));
-        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 1L),licenciaDAO, personaDAO.query(entityManager,1l)), vehiculoDAO);
-        pagarTramite(tramiteDAO.query(entityManager, 8L));
-        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 2L),licenciaDAO, personaDAO.query(entityManager,2l)), vehiculoDAO);
-        pagarTramite(tramiteDAO.query(entityManager, 9L));
-        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 3L),licenciaDAO, personaDAO.query(entityManager,3l)), vehiculoDAO);
-        pagarTramite(tramiteDAO.query(entityManager, 10L));
-    }
-}
+//    public static void registraPlacas() {
+//        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 1L), licenciaDAO, personaDAO.query(entityManager, 1l)), vehiculoDAO);
+//        pagarTramite(tramiteDAO.query(entityManager, 7L));
+//        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 1L), licenciaDAO, personaDAO.query(entityManager, 1l)), vehiculoDAO);
+//        pagarTramite(tramiteDAO.query(entityManager, 8L));
+//        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 2L), licenciaDAO, personaDAO.query(entityManager, 2l)), vehiculoDAO);
+//        pagarTramite(tramiteDAO.query(entityManager, 9L));
+//        placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, carroDAO.query(entityManager, 3L), licenciaDAO, personaDAO.query(entityManager, 3l)), vehiculoDAO);
+//        pagarTramite(tramiteDAO.query(entityManager, 10L));
+//    }
+//}

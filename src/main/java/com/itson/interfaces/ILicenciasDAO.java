@@ -4,6 +4,7 @@
  */
 package com.itson.interfaces;
 
+import com.itson.Exceptions.UnpaidProcedureException;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
@@ -19,16 +20,22 @@ public interface ILicenciasDAO {
 
     void insert(EntityManager entityManager, Licencia licencia);
 
-    boolean checkVality(EntityManager entityManager, Licencia licencia);
-
     ArrayList<Licencia> getLicencias(EntityManager entityManager, Long personaID);
 
     public boolean checkDriversLicense(EntityManager entityManager, Persona persona);
 
-    Licencia createLicencia (Persona persona, Pago pago, Vigencia vigencia);
-    
+    Licencia createLicencia(Persona persona, Pago pago, Vigencia vigencia);
+
+    void addLicencias(EntityManager entityManager, Licencia licencia);
+
     void updateLicencias(EntityManager entityManager, Persona persona);
+
+    void updateVigencias(EntityManager entityManager);
+
+    void updateRelatedProcedures(EntityManager entityManager, Pago pago);
     
-    ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id,Persona persona, Pago pago, Vigencia vigencia, Boolean estado);
+    boolean checkPreviousPayments(EntityManager entityManager,Persona persona );
+
+    ArrayList<Licencia> getListaLicencias(EntityManager entityManager, Long id, Persona persona, Pago pago, Vigencia vigencia, Boolean estado);
 
 }

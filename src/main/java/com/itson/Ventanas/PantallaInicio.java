@@ -5,6 +5,7 @@
 package com.itson.Ventanas;
 
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.licenciaDAO;
 import com.itson.daos.PersonaDAO;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -19,6 +20,7 @@ public class PantallaInicio extends javax.swing.JFrame {
      */
     public PantallaInicio() {
         initComponents();
+        licenciaDAO.updateVigencias(entityManager);
     }
 
     /**
@@ -132,6 +134,7 @@ public class PantallaInicio extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTramitesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTramitesActionPerformed
@@ -147,6 +150,7 @@ public class PantallaInicio extends javax.swing.JFrame {
 
         PantallaHistorial pantallaHistorial = new PantallaHistorial();
         pantallaHistorial.setVisible(true);
+        this.setVisible(false);
 
     }//GEN-LAST:event_btnHistorialActionPerformed
 

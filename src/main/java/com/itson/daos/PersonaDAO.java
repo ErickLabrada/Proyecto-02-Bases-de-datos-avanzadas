@@ -6,11 +6,13 @@ package com.itson.daos;
 
 import com.itson.Exceptions.ProcedureNotFoundException;
 import com.itson.Utilidades.EncriptadorSecreto;
+import com.itson.dominio.Licencia;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Tramite;
 import com.itson.interfaces.IPersonaDAO;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -55,7 +57,6 @@ public class PersonaDAO implements IPersonaDAO {
      */
     @Override
     public void insert(EntityManager entityManager, Persona persona) {
-        System.out.println(persona.getNombre());
         persona.setNombre(encriptador.encriptar(persona.getNombre()));
         List<Tramite> tramites = new ArrayList();
         persona.setTramite(tramites);
@@ -161,8 +162,20 @@ public class PersonaDAO implements IPersonaDAO {
 
     }
 
+    public Licencia getLatestLicense(EntityManager entityManager, Persona persona){
+        LicenciaDAO licenciaDAO = new LicenciaDAO();
+        ArrayList <Licencia> licencias = licenciaDAO.getListaLicencias(entityManager, null, persona, null, null, null);
+        Licencia latestLicense = licencias.get(0);
+        for (Licencia licencia: licencias){
+             if (licencia.getId()>latestLicense.getId()){
+                 latestLicense=licencia;
+             }
+        }
+        return latestLicense;
+    }
+    
     /**
-     * Método que verifica que una persona cumpla con los requisitos para
+     * Método que verifica que una persona cumpla con los requisitos par
      * realizar un tramite.
      *
      * @param entityManager
@@ -171,9 +184,9 @@ public class PersonaDAO implements IPersonaDAO {
      */
     @Override
     public boolean checkPersona(EntityManager entityManager, Persona persona) {
-
-        return persona.getRfc() != null && persona.getNombre() != null && persona.getFechaNacimiento() != null && persona.getTelefono() != null;
+        return persona.getRfc() != null && persona.getNombre() != null && persona.getFechaNacimiento() != null && persona.getTelefono() != null&&Period.between(persona.getFechaNacimiento(),LocalDate.now()).getYears()>=18;
     }
+    
 
     /**
      * Método que mediante una consulta dinamica regresa una lista con todas las
@@ -194,10 +207,9 @@ public class PersonaDAO implements IPersonaDAO {
      */
     @Override
     public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono) throws EntityNotFoundException {
-        System.out.println(nombre);
+       
         nombre = encriptador.encriptar(nombre);
-        System.out.println(nombre);
-
+        
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Persona> criteriaQuery = criteriaBuilder.createQuery(Persona.class);
         Root<Persona> persona = criteriaQuery.from(Persona.class);

@@ -62,13 +62,10 @@ public class PantallaAdministraPagos extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap(111, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btmEfectuarPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnCancelarPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btmEfectuarPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelarPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,14 +81,17 @@ public class PantallaAdministraPagos extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPagoActionPerformed
+        seleccionTramite.setAccion("Cancelación");
         seleccionTramite.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarPagoActionPerformed
 
     private void btmEfectuarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmEfectuarPagoActionPerformed
+        seleccionTramite.setAccion("Pago");
         seleccionTramite.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btmEfectuarPagoActionPerformed

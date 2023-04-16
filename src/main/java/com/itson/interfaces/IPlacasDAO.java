@@ -13,28 +13,28 @@ import com.itson.dominio.Vehiculo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 
 /**
  *
  * @author Erick
  */
 public interface IPlacasDAO {
-    
-    void insert (EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO);
-    
+
+    void insert(EntityManager entityManager, Placa placa, VehiculoDAO vehiculoDAO);
+
     String generateMatricula(EntityManager entityManager);
 
     ArrayList<String> getMatriculas(EntityManager entityManager);
 
-    public boolean checkMatricula(String matricula, ArrayList<String> matriculas);
+    boolean checkMatricula(String matricula, ArrayList<String> matriculas);
 
-    Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona);
+    Placa create(EntityManager entityManager, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, LicenciaDAO licenciaDAO, Persona persona, String matricula);
 
-    public boolean checkPreviousPayments(EntityManager entityManager, Placa placa);
+    boolean checkPreviousPayments(EntityManager entityManager, Placa placa);
 
-     ArrayList<Placa> getPlacas(EntityManager entityManager, Long vehiculoID);
-    
-    public ArrayList<Placa> getListaPersonas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona);
+    ArrayList<Placa> getPlacas(EntityManager entityManager, Long vehiculoID);
 
+    ArrayList<Placa> getListaPlacas(EntityManager entityManager, Long id, Boolean estado, LocalDate fechaRecepcion, Pago pago, Vehiculo vehiculo, Persona persona, LocalDate desde, LocalDate hasta) throws EntityNotFoundException;
 
 }

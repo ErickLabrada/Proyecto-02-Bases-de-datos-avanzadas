@@ -8,6 +8,7 @@ import com.itson.Exceptions.AlreadyPaidException;
 import com.itson.Exceptions.ProcedureNotFoundException;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
+import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
 import com.itson.interfaces.IPagoDAO;
 import java.time.LocalDate;
@@ -52,16 +53,30 @@ public class PagoDAO implements IPagoDAO {
      */
     @Override
     public void insert(EntityManager entityManager, Pago pago, TramiteDAO tramiteDAO) {
-        
-         if (pago.getTramite().getPago() != null) {
+
+        if (pago.getTramite().getPago() != null) {
             throw new AlreadyPaidException("El tramite ya fue pagado");
         } else {
-        entityManager.getTransaction().begin();
-        entityManager.persist(pago);
-        entityManager.getTransaction().commit();
-        tramiteDAO.addPago(entityManager, pago);
-       
-         }
+            entityManager.getTransaction().begin();
+            entityManager.persist(pago);
+            entityManager.getTransaction().commit();
+            tramiteDAO.addPago(entityManager, pago);
+
+            if (pago.getTramite().getClass().equals(Placa.class)) {
+                Placa placa = (Placa) pago.getTramite();
+                placa.setEstado(true);
+                entityManager.getTransaction().begin();
+                entityManager.merge(placa);
+                entityManager.getTransaction().commit();
+
+            } else if (pago.getTramite().getClass().equals(Licencia.class)) {
+                Licencia licencia = (Licencia) pago.getTramite();
+                licencia.setEstado(true);
+                entityManager.getTransaction().begin();
+                entityManager.merge(licencia);
+                entityManager.getTransaction().commit();
+            }
+        }
     }
 
     /**
@@ -76,10 +91,10 @@ public class PagoDAO implements IPagoDAO {
         Pago pago = entityManager.find(Pago.class, idPago);
 
         if (pago != null) {
-            Class clase = pago.getTramite().getClass();
-            if (clase == Licencia.class) {
+            if (pago.getTramite().getClass().equals(Licencia.class)) {
                 LicenciaDAO licenciaDAO = new LicenciaDAO();
-                licenciaDAO.deleteRelatedProcedures(entityManager, pago);
+                licenciaDAO.updateRelatedProcedures(entityManager, pago);
+                System.out.println("delete");
             }
             entityManager.getTransaction().begin();
             entityManager.remove(pago);

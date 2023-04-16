@@ -7,6 +7,7 @@ package com.itson.Ventanas;
 import com.itson.Exceptions.AlreadyPaidException;
 import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PagoDAO;
 import com.itson.daos.PersonaDAO;
@@ -18,6 +19,7 @@ import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.persistence.EntityNotFoundException;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -34,7 +36,8 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
     private Tramite selectedTramite;
     private Persona selectedPersona;
     private int indexTipo;
-    public EncriptadorSecreto encriptador = new EncriptadorSecreto();
+    private String accion;
+    private EncriptadorSecreto encriptador = new EncriptadorSecreto();
 
     
     public PantallaSeleccionaTramite() {
@@ -69,8 +72,8 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Roboto Black", 0, 18)); // NOI18N
         jLabel1.setText("Selecciona Tramite");
+        jLabel1.setFont(new java.awt.Font("Roboto Black", 0, 18)); // NOI18N
 
         jScrollPane1.setViewportView(jListTramites);
 
@@ -88,11 +91,11 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         jLabel2.setText("Persona:");
+        jLabel2.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         jLabel4.setText("Tipo de tramite");
+        jLabel4.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
 
         comboBoxTramite.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {"Licencias","Placas", "Todos" }));
         comboBoxTramite.addActionListener(new java.awt.event.ActionListener() {
@@ -101,14 +104,14 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         jLabel5.setText("Periodo:");
+        jLabel5.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         jLabel6.setText("Inicio del periodo:");
+        jLabel6.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         jLabel7.setText("Fin del periodo:");
+        jLabel7.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
 
         btnEscogerPersona.setText("Escoger persona");
         btnEscogerPersona.addActionListener(new java.awt.event.ActionListener() {
@@ -184,33 +187,50 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    public void setAccion(String accion) {
+        this.accion = accion;
+    }
 
     private void btnEscogerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogerActionPerformed
 
         TramiteDAO tramiteDAO = new TramiteDAO();
 
-        if (!jListTramites.getSize().equals(0)) {
-            Integer index = jListTramites.getSelectedIndex();
-            if (indexTipo == 0) {
-                selectedTramite = tramiteDAO.query(entityManager, listaLicencias.get(index).getId());
-            } else if (indexTipo == 1) {
-                selectedTramite = tramiteDAO.query(entityManager, listaPlacas.get(index).getId());
-            } else if (indexTipo == 2) {
-                selectedTramite = tramiteDAO.query(entityManager, listaTramites.get(index).getId());
+        if (!jListTramites.isSelectionEmpty()) {
+            String stringTramite = jListTramites.getSelectedValue();
+            String[] parts = stringTramite.split("\\|");
+            Long index = Long.parseLong(parts[0]);
+            
+            selectedTramite = tramiteDAO.query(entityManager, index);
+
+            String msgConfirmación = "";
+
+            if (accion.equals("Pago")) {
+                msgConfirmación = "¿Seguro de que quiere realizar el pago?";
+            } else if (accion.equals("Cancelación")) {
+                msgConfirmación = "¿Seguro de que quiere cancelar el pago?";
             }
-            int input = JOptionPane.showConfirmDialog(null, "Seguro de que quiere realizar el pago?");
+
+            int input = JOptionPane.showConfirmDialog(null, msgConfirmación);
 
             if (input == 0) {
                 PagoDAO pagoDAO = new PagoDAO();
                 try {
-                    pagoDAO.insert(entityManager, pagoDAO.create(1500, LocalDate.now(), selectedTramite), tramiteDAO);
-                    showMessageDialog(null, "Pago registrado exitosamente ^^");
+                    if (accion.equals("Pago")) {
+                        pagoDAO.insert(entityManager, pagoDAO.create(1500, LocalDate.now(), selectedTramite), tramiteDAO);
+                        showMessageDialog(null, "Pago registrado exitosamente ^^");
+                    } else if (accion.equals("Cancelación")) {
+                        pagoDAO.delete(entityManager, selectedTramite.getPago().getId());
+                        showMessageDialog(null, "Pago cancelado exitosamente :c");
+                    }
                 } catch (AlreadyPaidException e) {
-                    showMessageDialog(null, "El procedimiento ya se pagó ^^");
+                    showMessageDialog(null, "El procedimiento ya se había pagado ^^");
+                } catch (NullPointerException e) {
+                    showMessageDialog(null, "El procedimiento no se ha pagado");
                 }
-                PantallaInicio pantallaInicio = new PantallaInicio();
-                pantallaInicio.setVisible(true);
+                mainScreen.setVisible(true);
                 this.dispose();
 
             }
@@ -221,8 +241,8 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEscogerActionPerformed
 
-    public void getPersona(PantallaSeleccionaUsuario pantallaSeleccionPersona){
-        selectedPersona=pantallaSeleccionPersona.sendPersona();
+    public void getPersona(PantallaSeleccionaPersona pantallaSeleccionPersona) {
+        selectedPersona = pantallaSeleccionPersona.sendPersona();
     }
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -231,32 +251,83 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
 
         LicenciaDAO licenciaDAO = new LicenciaDAO();
         PlacaDAO placaDAO = new PlacaDAO();
-        PersonaDAO personaDAO = new PersonaDAO();
 
-        indexTipo=comboBoxTramite.getSelectedIndex();
-        
-        if (indexTipo == 0) {
-            listaLicencias = licenciaDAO.getListaLicencias(entityManager, null, selectedPersona, null, null, null);
-            for (Licencia licencia : listaLicencias) {
-                model.addElement(encriptador.desencriptar(licencia.getPersona().getNombre())+"|"+licencia.getVigencia().toString());
+        indexTipo = comboBoxTramite.getSelectedIndex();
+        try {
+            switch (indexTipo) {
+                case 0:
+                    listaLicencias = licenciaDAO.getListaLicencias(entityManager, null, selectedPersona, null, null, null);
+                    for (Licencia licencia : listaLicencias) {
+                        if (accion.equals("Pago")) {
+                            if (licencia.getPago() == null) {
+                                model.addElement(licencia.getId()+"|"+encriptador.desencriptar(licencia.getPersona().getNombre()) + "|" + licencia.getVigencia().toString());
+                            }
+                        } else if (accion.equals("Cancelación")) {
+                            if (licencia.getPago() != null) {
+                                model.addElement(licencia.getId()+"|"+encriptador.desencriptar(licencia.getPersona().getNombre()) + "|" + licencia.getVigencia().toString());
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    listaTramites = licenciaDAO.getListaTramites(entityManager, null, selectedPersona, null, null, null);
+                    for (Tramite tramite : listaTramites) {
+                        if (tramite.getClass().equals(Placa.class)) {
+                            Placa placa = (Placa) tramite;
+                            if (accion.equals("Pago")) {
+                                if (tramite.getPago() == null) {
+                                    model.addElement(placa.getId() + "|" + placa.getMatricula() + "|" + placa.getFechaRecepcion());
+                                }
+                            } else if (accion.equals("Cancelación")) {
+                                if (placa.getPago() != null) {
+                                    model.addElement(placa.getId() + "|" + placa.getMatricula() + "|" + placa.getFechaRecepcion());
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    listaTramites = licenciaDAO.getListaTramites(entityManager, null, selectedPersona, null, null, null);
+                    for (Tramite tramite : listaTramites) {
+                        if (accion.equals("Pago")) {
+                            if (tramite.getPago() == null) {
+                                if (tramite.getClass().equals(Placa.class)) {
+                                    Placa placa = (Placa) tramite;
+                                    model.addElement(placa.getId() + "|" + placa.getMatricula() + "|" + placa.getFechaRecepcion());
+                                } else if (tramite.getClass().equals(Licencia.class)) {
+                                    Licencia licencia = (Licencia) tramite;
+                                    model.addElement(licencia.getId() + "|" + encriptador.desencriptar(licencia.getPersona().getNombre()) + "|" + licencia.getVigencia().toString());
+                                }
+
+                            }
+                        } else if (accion.equals("Cancelación")) {
+                            if (tramite.getPago() != null) {
+                                if (tramite.getClass().equals(Placa.class)) {
+                                    Placa placa = (Placa) tramite;
+                                    model.addElement(placa.getId()+"|"+placa.getMatricula() + "|" + placa.getFechaRecepcion());
+                                } else if (tramite.getClass().equals(Licencia.class)) {
+                                    Licencia licencia = (Licencia) tramite;
+                                    model.addElement(licencia.getId()+"|"+encriptador.desencriptar(licencia.getPersona().getNombre()) + "|" + licencia.getVigencia().toString());
+                                }
+                            }
+                            
+                        }
+                    }   break;
+                default:
+                    break;
             }
-        } else if (indexTipo == 1) {
-            listaPlacas = placaDAO.getListaPersonas(entityManager, null, null, null, null, null, selectedPersona);
-            for (Placa placa : listaPlacas) {
-                model.addElement(placa.getMatricula()+"|"+placa.getFechaRecepcion());
+            jListTramites.setModel(model);
+            if (jListTramites.getModel().getSize()==0){
+                throw new EntityNotFoundException ("No se encontraron tramites con esos datos");
             }
-        } else if (indexTipo== 2) {
-            listaTramites = licenciaDAO.getListaTramites(entityManager, null, selectedPersona, null, null, null);
-            for (Tramite tramite : listaTramites) {
-                model.addElement(tramite.getClass().toString() + "|");
-            }
+        } catch (EntityNotFoundException e) {
+            showMessageDialog(null, "No se encontraron tramites con esos datos");
         }
-        jListTramites.setModel(model); 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEscogerPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogerPersonaActionPerformed
 
-        PantallaSeleccionaUsuario pantallaUsuario = new PantallaSeleccionaUsuario(this);
+        PantallaSeleccionaPersona pantallaUsuario = new PantallaSeleccionaPersona(this);
         pantallaUsuario.setVisible(true);
         this.setVisible(false);
 

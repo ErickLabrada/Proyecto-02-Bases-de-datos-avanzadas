@@ -82,6 +82,7 @@ public class PantallaGeneraReporte extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxTipoTramiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTipoTramiteActionPerformed

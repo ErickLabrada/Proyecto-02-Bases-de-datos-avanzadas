@@ -8,6 +8,7 @@ import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import com.itson.daos.CarroDAO;
 import com.itson.dominio.Carro;
 import com.itson.dominio.Vehiculo;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -144,29 +145,32 @@ public class RegistroVehiculo extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
 
-        if (comboBoxTipoVehiculo.getSelectedIndex()==0){
-            vehiculo=carroDAO.createCarro(jTextFieldColor.getText(), jTextFieldLinea.getText(), jTextFieldMarca.getText(), jTextFieldModelo.getText(), jTextFieldSerie.getText(), null);
+        if (jTextFieldColor.getText().isBlank() && jTextFieldLinea.getText().isBlank() && jTextFieldMarca.getText().isBlank() && jTextFieldModelo.getText().isBlank() && jTextFieldSerie.getText().isBlank()) {
+            showMessageDialog(null, "Ingrese todos los datos solicitados D:<");
+        } else if (comboBoxTipoVehiculo.getSelectedIndex() == 0) {
+
+            vehiculo = carroDAO.createCarro(jTextFieldColor.getText(), jTextFieldLinea.getText(), jTextFieldMarca.getText(), jTextFieldModelo.getText(), jTextFieldSerie.getText(), null);
             carroDAO.insert(entityManager, (Carro) vehiculo);
+            showMessageDialog(null, "Vehiculo registrado correctamente");
+            previousJFrame.getVehiculo(this);
+            previousJFrame.setVisible(true);
+            this.dispose();
         }
-        previousJFrame.getVehiculo(this);
-        previousJFrame.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    public Vehiculo sendVehiculo(){
+    public Vehiculo sendVehiculo() {
         return vehiculo;
     }
-    
+
     private void jTextFieldModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldModeloActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldModeloActionPerformed
 
-    
-    
     /**
      * @param args the command line arguments
      */

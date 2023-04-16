@@ -10,8 +10,11 @@ import com.itson.Exceptions.UnpaidProcedureException;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Pago;
 import com.itson.dominio.Persona;
-import com.itson.dominio.Tramite;
+import com.itson.dominio.Placa;
 import com.itson.dominio.Vigencia;
+import static com.itson.dominio.Vigencia.ONE_YEAR;
+import static com.itson.dominio.Vigencia.THREE_YEARS;
+import static com.itson.dominio.Vigencia.TWO_YEARS;
 import com.itson.interfaces.ILicenciasDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,16 +45,36 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
     @Override
     public void insert(EntityManager entityManager, Licencia licencia) {
 
-        System.out.println(licencia.getPersona().getNombre());
        if (!getLicencias(entityManager, licencia.getPersona().getId()).isEmpty()){
-       // if (!licencia.getPersona().getTramite().isEmpty()){
             updateLicencias(entityManager, licencia.getPersona());
         }
+       if (checkPreviousPayments(entityManager, licencia.getPersona())){
         entityManager.getTransaction().begin();
         entityManager.persist(licencia);
         entityManager.getTransaction().commit();
+        addLicencias(entityManager, licencia);
+        } else {
+            throw new UnpaidProcedureException("Aun no se ha pagado la licencia anterior de la persona");
+        }
     }
 
+    
+    /**
+     * Método que agrega licencias a una persona
+     *
+     * @param entityManager
+     * @param licencia
+     */
+    @Override
+    public void addLicencias(EntityManager entityManager, Licencia licencia) {
+        Persona persona = licencia.getPersona();
+        persona.getTramite().add(licencia);
+        entityManager.getTransaction().begin();
+        entityManager.merge(persona);
+        entityManager.getTransaction().commit();
+        
+    }
+    
     /**
      * Método que verifica la vigencia de una licencia
      *
@@ -62,33 +85,53 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
      *
      */
     @Override
-    public boolean checkVality(EntityManager entityManager, Licencia licencia) throws UnpaidProcedureException {
+    public void updateVigencias(EntityManager entityManager) throws UnpaidProcedureException {
 
-        LocalDate fechaVigencia;
+        try {
+            ArrayList<Licencia> licencias = getListaLicencias(entityManager, null, null, null, null, true);
+            LocalDate fechaVigencia = LocalDate.now();
 
-        switch (licencia.getVigencia()) {
-            case ONE_YEAR:
-                fechaVigencia = licencia.getPago().getFechaPago().plusYears(1);
-                System.out.println("a");
-                break;
-            case TWO_YEARS:
-                fechaVigencia = licencia.getPago().getFechaPago().plusYears(2);
-                System.out.println("b");
-                break;
-            case THREE_YEARS:
-                System.out.println("c");
-                fechaVigencia = licencia.getPago().getFechaPago().plusYears(3);
-                break;
-            default:
-                throw new UnpaidProcedureException("La licencia aun no se ha pagado D:<");
+            for (Licencia licenciaIndex : licencias) {
+                getFechaVigencia(licenciaIndex);
+                if (!LocalDate.now().isBefore(fechaVigencia)) {
+                    licenciaIndex.setEstado(false);
+                    entityManager.getTransaction().begin();
+                    entityManager.merge(licenciaIndex);
+                    entityManager.getTransaction().commit();
+                }
+
+            }
+        } catch (EntityNotFoundException e) {
         }
-
-        return LocalDate.now().isBefore(fechaVigencia);
     }
-
+/**
+ *Método que revisa que se hayan pagado las licencias anteriores
+ * 
+ * @param entityManager
+ * @param placa
+ * @return 
+ */
+    @Override
+    public boolean checkPreviousPayments(EntityManager entityManager,Persona persona ){
+        
+        ArrayList <Licencia> listalicencias = new ArrayList<Licencia>(getLicencias(entityManager, persona.getId()));
+        
+        if (listalicencias.isEmpty()){
+            return true;
+        }
+        
+        for (Licencia licenciaIndex: listalicencias){
+            if(licenciaIndex.getPago()==null){
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
-     * Método que obtiene una lista de todas las licencias registradas a nombre de una persona
-     *
+     * Método que obtiene una lista de todas las licencias registradas a nombre
+     * de una persona
+         *
      * @param entityManager
      * @param personaID
      * @return ArrayList<Licencia>
@@ -113,17 +156,20 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
     @Override
     public boolean checkDriversLicense(EntityManager entityManager, Persona persona) throws InvalidLicenseException {
 
-        ArrayList<Licencia> licencias = getListaLicencias(entityManager, null, persona, null, null, true);
+        try {
+            ArrayList<Licencia> licencias = getListaLicencias(entityManager, null, persona, null, null, true);
 
-        for (Licencia licenciaIndex : licencias) {
-            if (checkVality(entityManager, licenciaIndex)) {
-                return true;
+            for (Licencia licenciaIndex : licencias) {
+
+                if (licenciaIndex.isEstado()) {
+                    return true;
+                }
             }
-        }
-        throw new InvalidLicenseException("La licencia ha caducado");
+        } catch (EntityNotFoundException e) {   }
+        return false;
     }
-    
-        /**
+
+    /**
      * Método que actualiza el estado de las licencias de una persona.
      *
      * @param entityManager
@@ -132,23 +178,57 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
     @Override
     public void updateLicencias(EntityManager entityManager, Persona persona) {
 
-        List<Licencia> licencias = getListaLicencias(entityManager, null, persona, null, null, Boolean.TRUE);
+        List<Licencia> licencias = getListaLicencias(entityManager, null, persona, null, null, null);
 
         for (Licencia licencia : licencias) {
+            System.out.println(licencia.isEstado());
             licencia.setEstado(false);
             entityManager.getTransaction().begin();
             entityManager.merge(licencia);
             entityManager.getTransaction().commit();
+            System.out.println(licencia.isEstado());
+            System.out.println("-----");
         }
 
     }
-    
-    public void deleteRelatedProcedures(EntityManager entityManager, Pago pago){
-        TramiteDAO tramiteDAO = new TramiteDAO();
-        ArrayList <Tramite> tramites = tramiteDAO.getListaTramites(entityManager, null, pago.getTramite().getPersona(), null, null, null);
-                for (Tramite tramite: tramites){
-                    tramiteDAO.delete(entityManager,tramite.getId());
-                }
+
+    public LocalDate getFechaVigencia(Licencia licencia) {
+        try {
+            switch (licencia.getVigencia()) {
+                case ONE_YEAR:
+                    return licencia.getPago().getFechaPago().plusYears(1);
+                case TWO_YEARS:
+                    return licencia.getPago().getFechaPago().plusYears(2);
+                case THREE_YEARS:
+                    return licencia.getPago().getFechaPago().plusYears(3);
+                default:
+                    throw new RuntimeException("La vigencia no es válida");
+
+            }
+        } catch (NullPointerException e) {
+        }
+        return null;
+    }
+
+    @Override
+    public void updateRelatedProcedures(EntityManager entityManager, Pago pago) {
+        System.out.println("update");
+        PlacaDAO placaDAO = new PlacaDAO();
+
+        Licencia licencia = (Licencia) pago.getTramite();
+        try {
+            ArrayList<Placa> placas = placaDAO.getListaPlacas(entityManager, null, Boolean.TRUE, null, null, null, licencia.getPersona(), pago.getFechaPago(), null);
+
+            for (Placa placa : placas) {
+                placa.setEstado(false);
+                entityManager.getTransaction().begin();
+                entityManager.merge(placa);
+                entityManager.getTransaction().commit();
+            }
+        } catch (EntityNotFoundException e) {
+
+        }
+
     }
 
     /**
@@ -157,7 +237,6 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
      * @param persona
      * @param pago
      * @param vigencia
-     * @param estado
      * @return
      */
     @Override
@@ -167,7 +246,7 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         licencia.setPago(pago);
         licencia.setPersona(persona);
         licencia.setVigencia(vigencia);
-        licencia.setEstado(true);
+        licencia.setEstado(false);
 
         return licencia;
 
@@ -204,7 +283,6 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         Root<Licencia> licencia = criteriaQuery.from(Licencia.class);
         criteriaQuery.select(licencia);
         criteriaQuery.distinct(true);
-        StringBuilder stringBuilder;
 
         ArrayList<Predicate> criteria = new ArrayList<Predicate>();
 
