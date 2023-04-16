@@ -71,13 +71,28 @@ public class TramiteDAO implements ITramiteDAO {
         Tramite tramite = pago.getTramite();
 
        
-            entityManager.getTransaction().begin();
-            tramite.setPago(pago);
-            entityManager.merge(tramite);
-            entityManager.getTransaction().commit();
+        entityManager.getTransaction().begin();
+        tramite.setPago(pago);
+        entityManager.merge(tramite);
+        entityManager.getTransaction().commit();
 
     }
-    
+
+    /**
+     * Método que mediante una consulta dinamica regresa una lista con todos los
+     * tramites registrados en la base de datos que cumplan con los parámetros de
+     * busqueda.Arroja una excepción "EntityNotFoundException" en caso de no
+     * encontrar nada.
+     *
+     * @param entityManager
+     * @param id
+     * @param persona
+     * @param pago
+     * @param vigencia
+     * @param vehiculo
+     * @return
+     * @throws EntityNotFoundException
+     */
     public ArrayList<Tramite> getListaTramites(EntityManager entityManager, Long id, Persona persona, Pago pago, Vigencia vigencia, Vehiculo vehiculo) throws EntityNotFoundException {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -85,7 +100,6 @@ public class TramiteDAO implements ITramiteDAO {
         Root<Tramite> tramite = criteriaQuery.from(Tramite.class);
         criteriaQuery.select(tramite);
         criteriaQuery.distinct(true);
-        StringBuilder stringBuilder;
 
         ArrayList<Predicate> criteria = new ArrayList<Predicate>();
 
@@ -119,7 +133,7 @@ public class TramiteDAO implements ITramiteDAO {
 
         if (vigencia != null) {
 
-            ParameterExpression<Vigencia> parametro = criteriaBuilder.parameter(Vigencia.class, "rfc");
+            ParameterExpression<Vigencia> parametro = criteriaBuilder.parameter(Vigencia.class, "vigencia");
             criteria.add(criteriaBuilder.equal(tramite.get("vigencia"), parametro));
 
         }

@@ -79,9 +79,7 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
      * Método que verifica la vigencia de una licencia
      *
      * @param entityManager
-     * @param licencia
      * @throws UnpaidProcedureException
-     * @return true si está vigente, false si no
      *
      */
     @Override
@@ -108,7 +106,7 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
  *Método que revisa que se hayan pagado las licencias anteriores
  * 
  * @param entityManager
- * @param placa
+     * @param persona
  * @return 
  */
     @Override
@@ -127,11 +125,11 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         }
         return true;
     }
-    
+
     /**
      * Método que obtiene una lista de todas las licencias registradas a nombre
      * de una persona
-         *
+     *
      * @param entityManager
      * @param personaID
      * @return ArrayList<Licencia>
@@ -142,7 +140,7 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         TypedQuery<Licencia> query = entityManager.createQuery("SELECT l FROM Licencia l WHERE l.persona.id = :personaID", Licencia.class);
         query.setParameter("personaID", personaID);
         ArrayList<Licencia> licencias = new ArrayList<Licencia>(query.getResultList());
-            return licencias;
+        return licencias;
     }
 
     /**
@@ -191,7 +189,12 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         }
 
     }
-
+/**
+ * Método que obtiene la fecha de vigencia de una licencia
+ * 
+ * @param licencia
+ * @return LocalDate fechaVigencia
+ */
     public LocalDate getFechaVigencia(Licencia licencia) {
         try {
             switch (licencia.getVigencia()) {
@@ -210,6 +213,13 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
         return null;
     }
 
+    
+    /**
+     * Método que actualiza el estado de los tramites relacionados a una licencia
+     * 
+     * @param entityManager
+     * @param pago 
+     */
     @Override
     public void updateRelatedProcedures(EntityManager entityManager, Pago pago) {
         System.out.println("update");
@@ -258,13 +268,11 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
      * @param entityManager
      * @param vehiculo
      */
-
-
     /**
      * Método que mediante una consulta dinamica regresa una lista con todas las
      * licencias registradas en la base de datos que cumplan con los parámetros
      * de busqueda.Arroja una excepción "EntityNotFoundException" en caso de no
- encontrar nada.
+     * encontrar nada.
      *
      * @param entityManager
      * @param id

@@ -5,10 +5,7 @@
 package com.itson.interfaces;
 
 import com.itson.dominio.Pago;
-import com.itson.dominio.Persona;
 import com.itson.dominio.Tramite;
-import com.itson.dominio.Vigencia;
-import java.time.LocalDate;
 import javax.persistence.EntityManager;
 
 
