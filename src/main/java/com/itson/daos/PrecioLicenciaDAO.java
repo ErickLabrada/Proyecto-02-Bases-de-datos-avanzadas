@@ -10,6 +10,7 @@ import com.itson.interfaces.IPrecioLicenciaDAO;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -79,18 +80,33 @@ public class PrecioLicenciaDAO implements IPrecioLicenciaDAO {
 
     /**
      * Método que obtiene el precio de una licencia en base al tipo de vigencia
-     * 
+     *
      * @param entityManager
      * @param vigencia
      * @return precioLicencia
      */
-    
     public PrecioLicencia getPrecioLicencia(EntityManager entityManager, Vigencia vigencia) {
+        try {
+            TypedQuery<PrecioLicencia> query = entityManager.createQuery("SELECT p FROM PrecioLicencia p WHERE p.vigencia = :vigencia", PrecioLicencia.class);
+            query.setParameter("vigencia", vigencia);
+            PrecioLicencia licencia = query.getSingleResult();
+            return licencia;
+        } catch (NoResultException e) {
+            return null;
+        }
 
-        TypedQuery<PrecioLicencia> query = entityManager.createQuery("SELECT p FROM PrecioLicencia p WHERE p.vigencia = :vigencia", PrecioLicencia.class);
-        query.setParameter("vigencia", vigencia);
-        PrecioLicencia licencia = query.getSingleResult();
-        return licencia;
+    }
+
+    /**
+     * Método que inserta los precios por default de las licencias
+     *
+     * @param entityManager
+     */
+    public void insertDefaulPrices(EntityManager entityManager) {
+        insert(entityManager, createPrecioLicencia(entityManager, Vigencia.ONE_YEAR, 600.00, 200.00));
+        insert(entityManager, createPrecioLicencia(entityManager, Vigencia.TWO_YEARS, 900.00, 500.00));
+        insert(entityManager, createPrecioLicencia(entityManager, Vigencia.THREE_YEARS, 1100.00, 700.00));
+
     }
 
     /**

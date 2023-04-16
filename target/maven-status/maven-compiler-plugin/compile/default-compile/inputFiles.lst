@@ -1,12 +1,17 @@
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PersonaDAO.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PrecioPlacaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPlacasDAO.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Precio.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\PrecioPlaca.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaInicio.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaPlacas.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\RegistroVehiculo.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaSeleccionaTramite.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Persona.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PrecioDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\LicenciaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\TramiteDAO.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\PrecioLicencia.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Utilidades\EncriptadorSecreto.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Carro.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaGeneraReporte.java
@@ -15,6 +20,7 @@ C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\m
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaLicencia.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Pago.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaHistorial.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPrecioPlacaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPersonaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\ICarroDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaSeleccionaPersona.java
@@ -28,6 +34,8 @@ C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\m
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\CarroDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaTramites.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaAdministraPagos.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PrecioLicenciaDAO.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPrecioLicenciaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Ventanas\PantallaReporte.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\daos\PlacaDAO.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Exceptions\ProcedureNotFoundException.java
@@ -37,3 +45,4 @@ C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\m
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\Exceptions\AlreadyPaidException.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Vigencia.java
 C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\dominio\Licencia.java
+C:\Users\Erick\Documents\NetBeansProjects\Proyecto02.BasesDeDatosAvanzadas\src\main\java\com\itson\interfaces\IPrecioDAO.java

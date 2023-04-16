@@ -8,11 +8,11 @@ import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PagoDAO;
 import com.itson.daos.PersonaDAO;
 import com.itson.daos.PlacaDAO;
+import com.itson.daos.PrecioDAO;
+import com.itson.daos.PrecioLicenciaDAO;
+import com.itson.daos.PrecioPlacaDAO;
 import com.itson.daos.TramiteDAO;
 import com.itson.daos.VehiculoDAO;
-import com.itson.dominio.Tramite;
-import com.itson.dominio.Vigencia;
-import java.time.LocalDate;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,14 +32,15 @@ public class Proyecto02BasesDeDatosAvanzadas {
     static LicenciaDAO licenciaDAO = new LicenciaDAO();
     static TramiteDAO tramiteDAO = new TramiteDAO();
     static VehiculoDAO vehiculoDAO = new VehiculoDAO();
-    static PantallaInicio mainScreen= new PantallaInicio();
+    static PrecioDAO precioDAO = new PrecioDAO();
+    static PrecioPlacaDAO precioPlacaDAO = new PrecioPlacaDAO();
+    static PrecioLicenciaDAO precioLicenciaDAO = new PrecioLicenciaDAO();
+        static PantallaInicio mainScreen= new PantallaInicio();
 
     public static void main(String[] args) {
 
         PantallaInicio mainScreen = new PantallaInicio();
         mainScreen.setVisible(true);
-
-        System.out.println(tramiteDAO.query(entityManager, 3L));
         
 //        personaDAO.masiveInsert(entityManager);
 //        registraLicencias();

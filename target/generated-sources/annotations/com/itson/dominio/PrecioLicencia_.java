@@ -6,10 +6,11 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value="org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor", date="2023-04-16T13:14:34", comments="EclipseLink-2.7.10.v20211216-rNA")
-@StaticMetamodel(Licencia.class)
-public class Licencia_ extends Tramite_ {
+@StaticMetamodel(PrecioLicencia.class)
+public class PrecioLicencia_ extends Precio_ {
 
-    public static volatile SingularAttribute<Licencia, Vigencia> vigencia;
-    public static volatile SingularAttribute<Licencia, Boolean> estado;
+    public static volatile SingularAttribute<PrecioLicencia, Vigencia> vigencia;
+    public static volatile SingularAttribute<PrecioLicencia, Double> precioDiscapacidad;
+    public static volatile SingularAttribute<PrecioLicencia, Double> PrecioNormal;
 
 }

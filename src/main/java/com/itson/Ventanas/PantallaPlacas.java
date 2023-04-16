@@ -9,9 +9,12 @@ import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PlacaDAO;
+import com.itson.daos.PrecioPlacaDAO;
 import com.itson.daos.VehiculoDAO;
 import com.itson.dominio.Persona;
+import com.itson.dominio.PrecioPlaca;
 import com.itson.dominio.Vehiculo;
+import com.itson.dominio.Vigencia;
 import java.time.LocalDate;
 import javax.persistence.EntityNotFoundException;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -28,13 +31,14 @@ public class PantallaPlacas extends javax.swing.JFrame {
     private Vehiculo vehiculo;
     private Persona selectedPersona;
     private EncriptadorSecreto encriptador = new EncriptadorSecreto();
-    
+    private PrecioPlacaDAO precioPlacaDAO = new PrecioPlacaDAO();
+    private VehiculoDAO vehiculoDAO = new VehiculoDAO();
+    private boolean vehiculoValido = false;
 
-    
     public PantallaPlacas() {
         initComponents();
         updateData();
-        
+
     }
 
 
@@ -60,6 +64,8 @@ public class PantallaPlacas extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        btnCalcularCosto = new javax.swing.JButton();
+        btnVerificaVehiculo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,7 +80,6 @@ public class PantallaPlacas extends javax.swing.JFrame {
         });
 
         textFieldCosto.setEditable(false);
-        textFieldCosto.setText("$1,500");
         textFieldCosto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldCostoActionPerformed(evt);
@@ -118,6 +123,20 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
         jLabel5.setText("Matricula:");
 
+        btnCalcularCosto.setText("Calcular costo");
+        btnCalcularCosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcularCostoActionPerformed(evt);
+            }
+        });
+
+        btnVerificaVehiculo.setText("Verifica vehiculo");
+        btnVerificaVehiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerificaVehiculoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,9 +156,13 @@ public class PantallaPlacas extends javax.swing.JFrame {
                                 .addComponent(textFieldCosto)
                                 .addComponent(textFieldMatricula)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(btnCalcularCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(btnVerificaVehiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(textFieldPersona)
                                 .addComponent(textFieldSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel4)
@@ -172,7 +195,9 @@ public class PantallaPlacas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCalcularCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVerificaVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(48, 48, 48))
         );
 
@@ -193,8 +218,33 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
     }
 
+    public void updateCosto() {
+
+        PrecioPlaca preciosPlaca = precioPlacaDAO.getPrecioPlaca(entityManager);
+
+        Double costo = 0.0;
+        if (vehiculo.getPlacas().isEmpty()) {
+            costo = preciosPlaca.getPrecioVehiculoNuevo();
+        } else {
+            costo = preciosPlaca.getPrecioVehiculoViejo();
+        }
+        textFieldCosto.setText("$" + costo);
+    }
+
     public void getVehiculo(RegistroVehiculo registroVehiculo) {
         vehiculo = registroVehiculo.sendVehiculo();
+    }
+
+    private void verificarNumeroSerie() {
+        try {
+            vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, textFieldSerie.getText(), null).get(0);
+        } catch (EntityNotFoundException e) {
+            RegistroVehiculo registroVehiculo = new RegistroVehiculo(this, textFieldSerie.getText());
+            this.setVisible(false);
+            registroVehiculo.setVisible(true);
+        } finally {
+            vehiculoValido = true;
+        }
     }
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
@@ -205,22 +255,22 @@ public class PantallaPlacas extends javax.swing.JFrame {
             if (!selectedPersona.getTramite().isEmpty()) {
                 if (!textFieldSerie.getText().isBlank()) {
                     if (licenciaDAO.checkDriversLicense(entityManager, selectedPersona)) {
-
-                        VehiculoDAO vehiculoDAO = new VehiculoDAO();
-                        try {
-                            vehiculo = vehiculoDAO.getListaVehiculo(entityManager, null, null, null, null, textFieldSerie.getText(), null).get(0);
-                        } catch (EntityNotFoundException e) {
-                            RegistroVehiculo registroVehiculo = new RegistroVehiculo(this, textFieldSerie.getText());
-                            this.setVisible(false);
-                            registroVehiculo.setVisible(true);
+                        if (vehiculoValido) {
+                            if (vehiculo != null) {
+                                if (!textFieldCosto.getText().isBlank()) {
+                                    PlacaDAO placaDAO = new PlacaDAO();
+                                    placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, vehiculo, licenciaDAO, selectedPersona, textFieldMatricula.getText().substring(7)), vehiculoDAO);
+                                    showMessageDialog(null, "Placa registrada");
+                                    mainScreen.setVisible(true);
+                                    this.dispose();
+                                } else {
+                                    showMessageDialog(null, "Calcule el precio para asegurarse de que quiere seguir con el tramite ^^");
+                                }
+                            }
                         }
-                        if (vehiculo != null) {
-                            PlacaDAO placaDAO = new PlacaDAO();
-                            placaDAO.insert(entityManager, placaDAO.create(entityManager, LocalDate.now(), null, vehiculo, licenciaDAO, selectedPersona, textFieldMatricula.getText().substring(7)), vehiculoDAO);
-                            showMessageDialog(null, "Placa registrada");
-                            mainScreen.setVisible(true);
-                            this.dispose();
-                        }
+                        else{
+                             showMessageDialog(null, "Ingrese un vehiculo válido (Número de serie)");   
+                                }
                     } else {
                         showMessageDialog(null, "La persona no tiene licencia activa");
                     }
@@ -250,13 +300,31 @@ public class PantallaPlacas extends javax.swing.JFrame {
     }//GEN-LAST:event_textFieldCostoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        
+
         mainScreen.setVisible(true);
         this.dispose();
 
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    protected void updateData(){
+    private void btnCalcularCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularCostoActionPerformed
+        if (vehiculo != null) {
+            updateCosto();
+        } else {
+            showMessageDialog(null, "Ingrese un vehiculo válido (Número de serie)");
+        }
+    }//GEN-LAST:event_btnCalcularCostoActionPerformed
+
+    private void btnVerificaVehiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificaVehiculoActionPerformed
+
+        if (!textFieldSerie.getText().isBlank()) {
+            verificarNumeroSerie();
+        } else {
+            showMessageDialog(null, "Ingrese un número de serie");
+        }
+
+    }//GEN-LAST:event_btnVerificaVehiculoActionPerformed
+
+    protected void updateData() {
         PlacaDAO placasDAO = new PlacaDAO();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Placas:");
@@ -302,8 +370,10 @@ public class PantallaPlacas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JButton btnCalcularCosto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEscogePersona;
+    private javax.swing.JButton btnVerificaVehiculo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -6,6 +6,8 @@ package com.itson.Ventanas;
 
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.licenciaDAO;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.precioLicenciaDAO;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.precioPlacaDAO;
 import com.itson.daos.PersonaDAO;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -21,6 +23,10 @@ public class PantallaInicio extends javax.swing.JFrame {
     public PantallaInicio() {
         initComponents();
         licenciaDAO.updateVigencias(entityManager);
+        precioLicenciaDAO.insertDefaulPrices(entityManager);
+        precioPlacaDAO.insertDefaulPrices(entityManager);
+
+        
     }
 
     /**

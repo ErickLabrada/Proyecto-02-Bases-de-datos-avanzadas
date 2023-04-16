@@ -10,13 +10,15 @@ import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
 import com.itson.daos.PagoDAO;
-import com.itson.daos.PersonaDAO;
 import com.itson.daos.PlacaDAO;
+import com.itson.daos.PrecioLicenciaDAO;
+import com.itson.daos.PrecioPlacaDAO;
 import com.itson.daos.TramiteDAO;
 import com.itson.dominio.Licencia;
 import com.itson.dominio.Persona;
 import com.itson.dominio.Placa;
 import com.itson.dominio.Tramite;
+import com.itson.dominio.Vigencia;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.persistence.EntityNotFoundException;
@@ -38,7 +40,8 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
     private int indexTipo;
     private String accion;
     private EncriptadorSecreto encriptador = new EncriptadorSecreto();
-
+    private PrecioLicenciaDAO precioLicenciaDAO= new PrecioLicenciaDAO();
+    private PrecioPlacaDAO precioPlacaDAO= new PrecioPlacaDAO();
     
     public PantallaSeleccionaTramite() {
         initComponents();
@@ -202,7 +205,7 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
             String stringTramite = jListTramites.getSelectedValue();
             String[] parts = stringTramite.split("\\|");
             Long index = Long.parseLong(parts[0]);
-            
+
             selectedTramite = tramiteDAO.query(entityManager, index);
 
             String msgConfirmación = "";
@@ -212,14 +215,29 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
             } else if (accion.equals("Cancelación")) {
                 msgConfirmación = "¿Seguro de que quiere cancelar el pago?";
             }
-
             int input = JOptionPane.showConfirmDialog(null, msgConfirmación);
-
             if (input == 0) {
+                double costo = 0.0;
                 PagoDAO pagoDAO = new PagoDAO();
                 try {
                     if (accion.equals("Pago")) {
-                        pagoDAO.insert(entityManager, pagoDAO.create(1500, LocalDate.now(), selectedTramite), tramiteDAO);
+                        if (selectedTramite.getClass().equals(Licencia.class)) {
+                            Licencia licencia = (Licencia) selectedTramite;
+                            if (licencia.getPersona().isDiscapacidad()) {
+                                costo = precioLicenciaDAO.getPrecioLicencia(entityManager, licencia.getVigencia()).getPrecioDiscapacidad();
+                            } else {
+                                costo = precioLicenciaDAO.getPrecioLicencia(entityManager, licencia.getVigencia()).getPrecioNormal();
+                            }
+                        }
+                        if (selectedTramite.getClass().equals(Placa.class)) {
+                            Placa placa = (Placa) selectedTramite;
+                            if (placa.getVehiculo().getPlacas().size() == 1 && placa.getVehiculo().getPlacas().size() > 0) {
+                                costo = precioPlacaDAO.getPrecioPlaca(entityManager).getPrecioVehiculoNuevo();
+                            } else if (placa.getVehiculo().getPlacas().size() > 0) {
+                                costo = precioPlacaDAO.getPrecioPlaca(entityManager).getPrecioVehiculoViejo();
+                            }
+                        }
+                        pagoDAO.insert(entityManager, pagoDAO.create(costo, LocalDate.now(), selectedTramite), tramiteDAO);
                         showMessageDialog(null, "Pago registrado exitosamente ^^");
                     } else if (accion.equals("Cancelación")) {
                         pagoDAO.delete(entityManager, selectedTramite.getPago().getId());
@@ -228,6 +246,7 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
                 } catch (AlreadyPaidException e) {
                     showMessageDialog(null, "El procedimiento ya se había pagado ^^");
                 } catch (NullPointerException e) {
+                    System.out.println(e.toString());
                     showMessageDialog(null, "El procedimiento no se ha pagado");
                 }
                 mainScreen.setVisible(true);

@@ -9,6 +9,7 @@ import com.itson.interfaces.IPrecioPlacaDAO;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -24,28 +25,38 @@ public class PrecioPlacaDAO implements IPrecioPlacaDAO {
 
     /**
      * Método que inserta a la base de datos un objeto de tipo PrecioPlaca.
-     * 
+     *
      * @param entityManager
-     * @param precioPlaca 
+     * @param precioPlaca
      */
     @Override
     public void insert(EntityManager entityManager, PrecioPlaca precioPlaca) {
-        if (getPrecioPlaca(entityManager)!=null){
-            updatePrecioPlaca(entityManager,precioPlaca.getPrecioVehiculoNuevo(), precioPlaca.getPrecioVehiculoViejo());
-        } else{
+        if (getPrecioPlaca(entityManager) != null) {
+            updatePrecioPlaca(entityManager, precioPlaca.getPrecioVehiculoNuevo(), precioPlaca.getPrecioVehiculoViejo());
+        } else {
             entityManager.getTransaction().begin();
             entityManager.persist(precioPlaca);
             entityManager.getTransaction().commit();
         }
     }
-/**
- * Método que crea un objeto de tipo PrecioPlaca.
- * 
- * @param entityManager
- * @param precioVehiculoNuevo
- * @param precioVehiculoViejo
- * @return precioPlaca
- */
+
+    /**
+     * Método que inserta los precios por default de las placas
+     *
+     * @param entityManager
+     */
+    public void insertDefaulPrices(EntityManager entityManager) {
+        insert(entityManager, createPrecioPlaca(entityManager, 1500.00, 1000.00));
+    }
+
+    /**
+     * Método que crea un objeto de tipo PrecioPlaca.
+     *
+     * @param entityManager
+     * @param precioVehiculoNuevo
+     * @param precioVehiculoViejo
+     * @return precioPlaca
+     */
     @Override
     public PrecioPlaca createPrecioPlaca(EntityManager entityManager, double precioVehiculoNuevo, double precioVehiculoViejo) {
         PrecioPlaca precioPlaca = new PrecioPlaca();
@@ -53,13 +64,14 @@ public class PrecioPlacaDAO implements IPrecioPlacaDAO {
         precioPlaca.setPrecioVehiculoViejo(precioVehiculoViejo);
         return precioPlaca;
     }
-/**
- * Método que actualiza el objeto de tipo PrecioPlaca.
- * 
- * @param entityManager
- * @param precioVehiculoNuevo
- * @param precioVehiculoViejo 
- */
+
+    /**
+     * Método que actualiza el objeto de tipo PrecioPlaca.
+     *
+     * @param entityManager
+     * @param precioVehiculoNuevo
+     * @param precioVehiculoViejo
+     */
     @Override
     public void updatePrecioPlaca(EntityManager entityManager, double precioVehiculoNuevo, double precioVehiculoViejo) {
         PrecioPlaca precioPlaca = getPrecioPlaca(entityManager);
@@ -70,26 +82,28 @@ public class PrecioPlacaDAO implements IPrecioPlacaDAO {
         entityManager.getTransaction().commit();
     }
 
-    
     /**
      * Método que obtiene el precio de las placas
-
+     *
      * @param entityManager
      * @return PrecioPlaca
      */
     @Override
     public PrecioPlaca getPrecioPlaca(EntityManager entityManager) {
-
-        TypedQuery<PrecioPlaca> query = entityManager.createQuery("SELECT p FROM PrecioPlaca", PrecioPlaca.class);
-        query.setMaxResults(1);
-        return query.getSingleResult();
+        try {
+            TypedQuery<PrecioPlaca> query = entityManager.createQuery("SELECT p FROM PrecioPlaca p", PrecioPlaca.class);
+            query.setMaxResults(1);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     /**
      * Método que mediante una consulta dinamica regresa una lista con todos los
-     * precios de placas registrados en la base de datos que cumplan con los parámetros de
-     * busqueda.Arroja una excepción "EntityNotFoundException" en caso de no
-     * encontrar nada.
+     * precios de placas registrados en la base de datos que cumplan con los
+     * parámetros de busqueda.Arroja una excepción "EntityNotFoundException" en
+     * caso de no encontrar nada.
      *
      * @param entityManager
      * @param id
@@ -98,7 +112,7 @@ public class PrecioPlacaDAO implements IPrecioPlacaDAO {
      * @return ArrayList <PrecioPlaca> listaPreciosPlaca
      */
     @Override
-    public ArrayList<PrecioPlaca> getListaPrecios(EntityManager entityManager, Long id, Double precioVehiculoNuevo,Double precioVehiculoViejo) {
+    public ArrayList<PrecioPlaca> getListaPrecios(EntityManager entityManager, Long id, Double precioVehiculoNuevo, Double precioVehiculoViejo) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PrecioPlaca> criteriaQuery = criteriaBuilder.createQuery(PrecioPlaca.class);
         Root<PrecioPlaca> precioPlaca = criteriaQuery.from(PrecioPlaca.class);

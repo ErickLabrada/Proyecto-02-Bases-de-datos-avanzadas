@@ -39,9 +39,13 @@
                               <Component id="textFieldCosto" max="32767" attributes="0"/>
                               <Component id="textFieldMatricula" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="btnCancelar" min="-2" pref="225" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btnAceptar" min="-2" pref="225" max="-2" attributes="0"/>
+                                  <Component id="btnCancelar" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btnCalcularCosto" min="-2" pref="122" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btnVerificaVehiculo" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btnAceptar" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
                               <Component id="textFieldPersona" max="32767" attributes="0"/>
                               <Component id="textFieldSerie" alignment="0" min="-2" pref="500" max="-2" attributes="0"/>
@@ -82,6 +86,8 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnCancelar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                   <Component id="btnAceptar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Component id="btnCalcularCosto" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Component id="btnVerificaVehiculo" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
           </Group>
@@ -108,7 +114,6 @@
     <Component class="javax.swing.JTextField" name="textFieldCosto">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-        <Property name="text" type="java.lang.String" value="$1,500"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldCostoActionPerformed"/>
@@ -167,6 +172,22 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Matricula:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnCalcularCosto">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Calcular costo"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCalcularCostoActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnVerificaVehiculo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Verifica vehiculo"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerificaVehiculoActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

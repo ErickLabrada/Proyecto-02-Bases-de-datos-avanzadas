@@ -206,6 +206,7 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
                 pantallaPlacas.getPersona(this);
             } else if (previousJFrame.getClass().equals(PantallaLicencia.class)) {
                 pantallaLicencia.getPersona(this);
+                pantallaLicencia.updateCosto();
             } else if (previousJFrame.getClass().equals(PantallaSeleccionaTramite.class)) {
                 pantallaTramite.getPersona(this);
             }

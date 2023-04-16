@@ -8,7 +8,9 @@ import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.LicenciaDAO;
+import com.itson.daos.PrecioLicenciaDAO;
 import com.itson.dominio.Persona;
+import com.itson.dominio.PrecioLicencia;
 import com.itson.dominio.Vigencia;
 import javax.swing.DefaultComboBoxModel;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -22,6 +24,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
     private Persona selectedPersona;
     private EncriptadorSecreto encriptador = new EncriptadorSecreto();
     private LicenciaDAO licenciaDAO = new LicenciaDAO();
+    private PrecioLicenciaDAO precioLicenciaDAO= new PrecioLicenciaDAO();
 
 
     /**
@@ -47,7 +50,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        textPaneCosto1 = new javax.swing.JTextPane();
+        textPaneCosto = new javax.swing.JTextPane();
         textFieldPersona = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -83,10 +86,10 @@ public class PantallaLicencia extends javax.swing.JFrame {
             }
         });
 
-        textPaneCosto1.setEditable(false);
-        textPaneCosto1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        textPaneCosto1.setText("Costo: $1100");
-        jScrollPane2.setViewportView(textPaneCosto1);
+        textPaneCosto.setEditable(false);
+        textPaneCosto.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        textPaneCosto.setText("Costo: $600");
+        jScrollPane2.setViewportView(textPaneCosto);
 
         textFieldPersona.setText("Persona:");
 
@@ -136,8 +139,20 @@ public class PantallaLicencia extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    public void updateCosto(){
+        PrecioLicencia precioLicencia = precioLicenciaDAO.getPrecioLicencia(entityManager, (Vigencia) comboBoxVigencia.getSelectedItem());
+        Double costo = 0.0;
+        if (selectedPersona.isDiscapacidad()){
+            costo = precioLicencia.getPrecioDiscapacidad();
+        } else{
+            costo = precioLicencia.getPrecioNormal();
+        }
+        textPaneCosto.setText("Costo: $"+costo);
+    }
+    
     private void comboBoxVigenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxVigenciaActionPerformed
 
+        updateCosto();
 
     }//GEN-LAST:event_comboBoxVigenciaActionPerformed
 
@@ -224,6 +239,6 @@ public class PantallaLicencia extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField textFieldPersona;
-    private javax.swing.JTextPane textPaneCosto1;
+    private javax.swing.JTextPane textPaneCosto;
     // End of variables declaration//GEN-END:variables
 }

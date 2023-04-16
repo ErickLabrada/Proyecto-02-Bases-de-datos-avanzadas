@@ -91,7 +91,8 @@ public class LicenciaDAO extends TramiteDAO implements ILicenciasDAO {
 
             for (Licencia licenciaIndex : licencias) {
                 getFechaVigencia(licenciaIndex);
-                if (!LocalDate.now().isBefore(fechaVigencia)) {
+                if (LocalDate.now().isAfter(fechaVigencia)) {
+                    System.out.println("AAAAAAAAAAA");
                     licenciaIndex.setEstado(false);
                     entityManager.getTransaction().begin();
                     entityManager.merge(licenciaIndex);
