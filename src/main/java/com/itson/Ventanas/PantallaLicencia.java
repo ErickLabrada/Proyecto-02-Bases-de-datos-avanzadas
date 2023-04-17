@@ -91,6 +91,7 @@ public class PantallaLicencia extends javax.swing.JFrame {
         textPaneCosto.setText("Costo: $600");
         jScrollPane2.setViewportView(textPaneCosto);
 
+        textFieldPersona.setEditable(false);
         textFieldPersona.setText("Persona:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -137,6 +137,7 @@
     </Container>
     <Component class="javax.swing.JTextField" name="textFieldPersona">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="Persona:"/>
       </Properties>
     </Component>

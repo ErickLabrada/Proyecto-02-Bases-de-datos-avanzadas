@@ -18,14 +18,13 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 
-
 /**
  *
  * @author Erick
  */
 public class PantallaHistorial extends javax.swing.JFrame {
 
-    private Persona persona;
+    private Persona persona=null;
     private PersonaDAO personaDAO = new PersonaDAO();
     private TramiteDAO tramiteDAO = new TramiteDAO();
     private EncriptadorSecreto encriptador = new EncriptadorSecreto();
@@ -90,6 +89,8 @@ public class PantallaHistorial extends javax.swing.JFrame {
 
         jLabel1.setText("HISTORIAL");
         jLabel1.setFont(new java.awt.Font("Roboto Black", 0, 18)); // NOI18N
+
+        jTextFieldPersona.setEditable(false);
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -168,7 +169,6 @@ public class PantallaHistorial extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-
         mainScreen.setVisible(true);
         this.dispose();
 
