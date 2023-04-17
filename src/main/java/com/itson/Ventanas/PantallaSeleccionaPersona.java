@@ -6,6 +6,7 @@ package com.itson.Ventanas;
 
 import com.itson.Utilidades.EncriptadorSecreto;
 import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.entityManager;
+import static com.itson.Ventanas.Proyecto02BasesDeDatosAvanzadas.mainScreen;
 import com.itson.daos.PersonaDAO;
 import com.itson.dominio.Persona;
 import java.util.ArrayList;
@@ -28,11 +29,20 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
     private PantallaSeleccionaTramite pantallaTramite;
     private Persona selectedPersona;
     private PersonaDAO personaDAO = new PersonaDAO();
+    private Integer year = null;
+    private PantallaHistorial pantallaHistorial;
+    private DefaultListModel<String> model = new DefaultListModel<>();
 
     /**
      * Creates new form PantallaConsulta
      */
 
+    public PantallaSeleccionaPersona(PantallaHistorial pantallaHistorial) {
+        initComponents();
+        this.previousJFrame = pantallaHistorial;
+        this.pantallaHistorial = pantallaHistorial;
+    }
+    
     public PantallaSeleccionaPersona(PantallaSeleccionaTramite pantallaTramite) {
         initComponents();
         this.previousJFrame = pantallaTramite;
@@ -69,12 +79,13 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListUsuarios = new javax.swing.JList<>();
         textFieldRFC = new javax.swing.JTextField();
-        textFieldRFC2 = new javax.swing.JTextField();
+        textFieldBirthYear = new javax.swing.JTextField();
         btnEscoger = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,20 +98,25 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
                 textFieldNombreActionPerformed(evt);
             }
         });
+        textFieldNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                textFieldNombreKeyReleased(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(jListUsuarios);
 
         textFieldRFC.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textFieldRFC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldRFCActionPerformed(evt);
+        textFieldRFC.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                textFieldRFCKeyReleased(evt);
             }
         });
 
-        textFieldRFC2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textFieldRFC2.addActionListener(new java.awt.event.ActionListener() {
+        textFieldBirthYear.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textFieldBirthYear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldRFC2ActionPerformed(evt);
+                textFieldBirthYearActionPerformed(evt);
             }
         });
 
@@ -127,6 +143,13 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         jLabel4.setText("RFC:");
 
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,25 +159,24 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(textFieldBirthYear, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(textFieldRFC, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(textFieldRFC, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel4)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnEscoger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(btnEscoger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(50, 50, 50))
         );
         layout.setVerticalGroup(
@@ -175,12 +197,13 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(textFieldRFC2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(textFieldBirthYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEscoger, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21))
         );
 
@@ -192,9 +215,34 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldNombreActionPerformed
 
-    private void textFieldRFCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFCActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldRFCActionPerformed
+    public boolean yearIsValid() {
+        String year = textFieldBirthYear.getText();
+        if (year != null || !year.isBlank()) {
+            if (year.length() != 4) {
+                return false;
+            }
+        }
+        try {
+            int numericYear = Integer.parseInt(year);
+            return numericYear >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void buscar() {
+
+        model = new DefaultListModel<>();
+        if (!textFieldBirthYear.getText().isEmpty() || !textFieldBirthYear.getText().isBlank()) {
+            year = Integer.parseInt(textFieldBirthYear.getText());
+        }
+        listaPersonas = personaDAO.getListaPersonas(entityManager, null, null, null, null, textFieldNombre.getText(), textFieldRFC.getText(), null, year);
+        for (Persona persona : listaPersonas) {
+            model.addElement(encriptador.desencriptar(persona.getNombre()));
+        }
+        jListUsuarios.setModel(model);
+
+    }
 
     private void btnEscogerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscogerActionPerformed
 
@@ -209,6 +257,8 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
                 pantallaLicencia.updateCosto();
             } else if (previousJFrame.getClass().equals(PantallaSeleccionaTramite.class)) {
                 pantallaTramite.getPersona(this);
+            }   else if (previousJFrame.getClass().equals(PantallaHistorial.class)){
+                pantallaHistorial.getPersona(this);
             }
 
             previousJFrame.setVisible(true);
@@ -220,19 +270,19 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEscogerActionPerformed
 
+    
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
 
-        DefaultListModel<String> model = new DefaultListModel<>();
+       model = new DefaultListModel<>();
 
         try {
-
-            listaPersonas = personaDAO.getListaPersonas(entityManager, null, null, null, null, textFieldNombre.getText(), textFieldRFC.getText(), null);
-            for (Persona persona : listaPersonas) {
-                model.addElement(encriptador.desencriptar(persona.getNombre()));
+            if (yearIsValid()) {
+                year=Integer.parseInt(textFieldBirthYear.getText());
+                buscar();
+                year=null;
+            } else {
+                showMessageDialog(null, "Ingrese un año válido");
             }
-
-            jListUsuarios.setModel(model);
-
         } catch (EntityNotFoundException e) {
             showMessageDialog(null, "No se encontraron personas con esos datos");
         }
@@ -242,9 +292,35 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
         return selectedPersona;
     }
 
-    private void textFieldRFC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldRFC2ActionPerformed
+    private void textFieldBirthYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldBirthYearActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldRFC2ActionPerformed
+    }//GEN-LAST:event_textFieldBirthYearActionPerformed
+
+    private void textFieldNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldNombreKeyReleased
+try {
+
+            buscar();
+
+        } catch (EntityNotFoundException e) {
+
+        }
+    }//GEN-LAST:event_textFieldNombreKeyReleased
+
+    private void textFieldRFCKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldRFCKeyReleased
+try {
+
+            buscar();
+
+        } catch (EntityNotFoundException e) {
+
+        }
+    }//GEN-LAST:event_textFieldRFCKeyReleased
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        mainScreen.setVisible(true);
+        this.dispose();;
+
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,6 +366,7 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEscoger;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -297,8 +374,8 @@ public class PantallaSeleccionaPersona extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     protected javax.swing.JList<String> jListUsuarios;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField textFieldBirthYear;
     private javax.swing.JTextField textFieldNombre;
     private javax.swing.JTextField textFieldRFC;
-    private javax.swing.JTextField textFieldRFC2;
     // End of variables declaration//GEN-END:variables
 }

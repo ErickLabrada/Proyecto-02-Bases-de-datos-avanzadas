@@ -31,6 +31,6 @@ public interface IPersonaDAO {
 
     boolean checkPersona(EntityManager entityManager, Persona persona);
     
-    ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono);
+    ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono,Integer birthYear);
 
 }

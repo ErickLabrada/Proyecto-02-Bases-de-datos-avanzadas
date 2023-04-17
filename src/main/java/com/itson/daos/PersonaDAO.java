@@ -20,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -206,7 +207,7 @@ public class PersonaDAO implements IPersonaDAO {
      * @return ArrayList<Persona>;
      */
     @Override
-    public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono) throws EntityNotFoundException {
+    public ArrayList<Persona> getListaPersonas(EntityManager entityManager, Long id, Boolean discapacidad, LocalDate fechaInicio, LocalDate fechaFin, String nombre, String rfc, String telefono, Integer birthYear) throws EntityNotFoundException {
        
         nombre = encriptador.encriptar(nombre);
         
@@ -230,6 +231,14 @@ public class PersonaDAO implements IPersonaDAO {
 
             ParameterExpression<Boolean> parametro = criteriaBuilder.parameter(Boolean.class, "discapacidad");
             criteria.add(criteriaBuilder.equal(persona.get("discapacidad"), parametro));
+
+        }
+
+        if (birthYear != null) {
+
+            ParameterExpression<Integer> parametro = criteriaBuilder.parameter(Integer.class, "birthYear");
+            Expression<Integer> expression = criteriaBuilder.function("year", Integer.class, persona.get("fechaNacimiento"));
+            criteria.add(criteriaBuilder.equal(expression, parametro));
 
         }
 
@@ -279,6 +288,9 @@ public class PersonaDAO implements IPersonaDAO {
 
         if (id != null) {
             query.setParameter("id", id);
+        }
+        if (birthYear != null) {
+            query.setParameter("birthYear", birthYear);
         }
         if (discapacidad != null) {
             query.setParameter("discapacidad", discapacidad);

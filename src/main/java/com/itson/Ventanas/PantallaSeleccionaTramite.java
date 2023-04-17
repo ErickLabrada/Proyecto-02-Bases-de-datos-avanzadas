@@ -289,7 +289,7 @@ public class PantallaSeleccionaTramite extends javax.swing.JFrame {
                     }
                     break;
                 case 1:
-                    listaTramites = licenciaDAO.getListaTramites(entityManager, null, selectedPersona, null, null, null);
+                        listaTramites = licenciaDAO.getListaTramites(entityManager, null, selectedPersona, null, null, null);
                     for (Tramite tramite : listaTramites) {
                         if (tramite.getClass().equals(Placa.class)) {
                             Placa placa = (Placa) tramite;

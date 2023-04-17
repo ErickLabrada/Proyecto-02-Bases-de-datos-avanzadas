@@ -9,12 +9,14 @@ com\itson\dominio\PrecioLicencia_.class
 com\itson\Ventanas\PantallaPlacas$5.class
 com\itson\Ventanas\PantallaLicencia$1.class
 com\itson\Ventanas\PantallaSeleccionaTramite$4.class
+com\itson\Ventanas\PantallaPlacas$8.class
 com\itson\Ventanas\PantallaSeleccionaPersona$2.class
 com\itson\interfaces\IPrecioDAO.class
 com\itson\Ventanas\PantallaSeleccionaTramite.class
 com\itson\dominio\Precio_.class
 com\itson\interfaces\IPlacasDAO.class
 com\itson\daos\PrecioLicenciaDAO.class
+com\itson\Ventanas\PantallaHistorial$4.class
 com\itson\Ventanas\PantallaSeleccionaPersona.class
 com\itson\Ventanas\PantallaInicio$8.class
 com\itson\dominio\Carro_.class
@@ -24,6 +26,7 @@ com\itson\Ventanas\PantallaInicio$5.class
 com\itson\interfaces\IPersonaDAO.class
 com\itson\Ventanas\PantallaLicencia$3.class
 com\itson\daos\PlacaDAO.class
+com\itson\Ventanas\PantallaHistorial$5.class
 com\itson\Ventanas\PantallaInicio$6.class
 com\itson\Ventanas\RegistroVehiculo.class
 com\itson\Ventanas\PantallaPlacas$3.class
@@ -39,6 +42,7 @@ com\itson\dominio\Pago_.class
 com\itson\Ventanas\PantallaGeneraReporte.class
 com\itson\Ventanas\PantallaPlacas.class
 com\itson\Ventanas\PantallaInicio$7.class
+com\itson\Ventanas\PantallaPlacas$9.class
 com\itson\Ventanas\PantallaSeleccionaTramite$5.class
 com\itson\Ventanas\PantallaPlacas$2.class
 com\itson\dominio\Tramite_.class
@@ -89,6 +93,7 @@ com\itson\dominio\Persona_.class
 com\itson\Ventanas\PantallaLicencia.class
 com\itson\Exceptions\AlreadyPaidException.class
 com\itson\Ventanas\PantallaSeleccionaPersona$1.class
+com\itson\Ventanas\PantallaSeleccionaPersona$7.class
 com\itson\Ventanas\PantallaSeleccionaTramite$2.class
 com\itson\Ventanas\PantallaGeneraReporte$1.class
 com\itson\Exceptions\InvalidLicenseException.class
